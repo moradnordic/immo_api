@@ -1,0 +1,7 @@
+{% if field.value %}
+    <div class="property-images">
+        {% for image in field.value %}
+            <img src="{{ asset('/uploads/images/properties/' ~ image) }}" alt="Property image" style="max-width: 150px; margin-right: 10px;">
+        {% endfor %}
+    </div>
+{% endif %}
