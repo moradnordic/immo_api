@@ -1,46 +1,66 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+            algorithm: auto
+
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppAuthenticator
+            custom_authenticators:
+                - App\Security\AppAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
+                invalidate_session: true
+            stateless: false
+            form_login:
+                login_path: app_login
+                check_path: app_login
+            entry_point: form_login
 
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /
-                # by default, the feature is enabled by checking a checkbox in the
-                # login form, uncomment the following line to always enable it.
-                #always_remember_me: true
+            # Note: Pas de redirection ici
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+        # Firewall pour gérer l'authentification JWT via JSON Login
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+
+
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }  # Allow public access to logout
+
+        - { path: ^/login, roles: PUBLIC_ACCESS  }
+        - { path: ^/property/api, roles: PUBLIC_ACCESS } # Public access for /property/api
+        - { path: ^/admin, roles: ROLE_ADMIN } # Admin access to all admin pages
+        - { path: ^/agence, roles: [ ROLE_ADMIN, ROLE_AGENCE ,ROLE_AGENT] } # Admin and Agence roles
+        - { path: ^/user, roles: [ ROLE_ADMIN, ROLE_AGENCE ] } # Admin and Agence roles
+        - { path: ^/blogs, roles: [ ROLE_ADMIN, ROLE_AGENT,ROLE_AGENCE ] } # Admin and Agent roles
+        - { path: ^/address, roles: [ ROLE_ADMIN, ROLE_AGENT ] } # Admin and Agent roles
+        - { path: ^/property, roles: [ ROLE_ADMIN, ROLE_AGENT,ROLE_AGENCE ] } # Admin and Agent roles
+        - { path: ^/, roles: ROLE_ADMIN } # Admin access to all other pages
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+
 
 when@test:
     security:

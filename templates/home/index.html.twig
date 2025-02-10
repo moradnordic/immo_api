@@ -1,0 +1,24 @@
+{# templates/home/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue sur la page d'accueil</h1>
+
+    {% if 'ROLE_ADMIN' in roles %}
+        <p>Vous êtes un administrateur. Vous avez accès à toutes les pages.</p>
+        <a href="{{ path('admin') }}">Accéder au tableau de bord admin</a>
+    {% elseif 'ROLE_AGENCE' in roles %}
+        <p>Vous êtes une agence. Vous pouvez modifier les détails de l'agence.</p>
+        <a href="{{ path('app_agence_index') }}">Accéder aux détails de l'agence</a>
+    {% elseif 'ROLE_AGENT' in roles %}
+        <p>Vous êtes un agent. Vous avez accès aux blogs, adresses et propriétés.</p>
+        <a href="{{ path('app_blogs') }}">Voir les blogs</a>
+        <a href="{{ path('app_address_index') }}">Voir les adresses</a>
+        <a href="{{ path('app_property_index') }}">Voir les propriétés</a>
+    {% else %}
+        <p>Bienvenue, invité. Veuillez vous connecter pour accéder à plus de fonctionnalités.</p>
+    {% endif %}
+{% endblock %}

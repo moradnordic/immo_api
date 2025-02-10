@@ -7,17 +7,21 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PropertyRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+
+
 
 #[AllowDynamicProperties] #[ORM\Entity(repositoryClass: PropertyRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['property:read']],
     denormalizationContext: ['groups' => ['property:write']]
 )]
-#[Vich\Uploadable]
 
+#[Vich\Uploadable]
+#[ORM\HasLifecycleCallbacks]
 class Property
 {
 
@@ -138,6 +142,14 @@ class Property
     #[Groups(['property:read', 'property:write'])]
     private ?string $saleOrRent = null;
 
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['property:read', 'property:write'])]
+    private ?string $promotion = null;
+
+    #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: true)]
+    #[Groups(['property:read', 'property:write'])]
+    private ?float $prixPromo = null;
 
     // Getters and setters for the new fields
     public function getType(): ?string
@@ -414,17 +426,29 @@ class Property
         return $this;
     }
 
+    // JSON field to store image paths
+    // JSON field to store image paths
     #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['property:read', 'property:write'])]
     private ?array $img = [];
 
-    // Not stored in the database, only for file uploads
-    private ?array $imageFiles = null;
+    // Property to handle multiple uploaded files
+    private ?array $imageFiles = [];
 
-    // Setters and Getters
+    
 
+    // Getters and setters
     public function getImg(): ?array
     {
         return $this->img;
+    }
+    public function getImgurl(): ?array
+    {
+        $imgUrlArray = array();
+        foreach ($this->getImg() as $img) {
+            $imgUrlArray[] = 'http://127.0.0.1:8000/uploads/images/' . $img[0];
+        }
+        return $imgUrlArray;
     }
 
     public function setImg(?array $img): self
@@ -433,16 +457,43 @@ class Property
         return $this;
     }
 
+    /**
+     * Get the uploaded image files.
+     *
+     * @return UploadedFile[]|null
+     */
     public function getImageFiles(): ?array
     {
         return $this->imageFiles;
     }
 
+    /**
+     * Set the uploaded image files.
+     *
+     * @param UploadedFile[]|null $imageFiles
+     * @return self
+     */
     public function setImageFiles(?array $imageFiles): self
     {
         $this->imageFiles = $imageFiles;
         return $this;
     }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function setCreatedAtValue(): void
+    {
+        if (!$this->createdAt) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
@@ -460,6 +511,15 @@ class Property
     #[ORM\Column(length: 255)]
     private ?string $neighborhood = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nbrEtage = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type_usage = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $meubler = null;
+
     // Getter and Setter for neighborhood
     public function getNeighborhood(): ?string
     {
@@ -472,22 +532,60 @@ class Property
         return $this;
     }
 
-    #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
+    public function getPromotion(): ?string
     {
-        $this->createdAt = new \DateTimeImmutable();
+        return $this->promotion;
     }
 
-    public function getId(): ?int
+    public function setPromotion(?string $promotion): void
     {
-        return $this->id;
+        $this->promotion = $promotion;
     }
 
-    public function setId(?int $id): void
+    public function getPrixPromo(): ?float
     {
-        $this->id = $id;
+        return $this->prixPromo;
     }
 
+    public function setPrixPromo(?float $prixPromo): void
+    {
+        $this->prixPromo = $prixPromo;
+    }
 
+    public function getNbrEtage(): ?string
+    {
+        return $this->nbrEtage;
+    }
+
+    public function setNbrEtage(?string $nbrEtage): static
+    {
+        $this->nbrEtage = $nbrEtage;
+
+        return $this;
+    }
+
+    public function getTypeUsage(): ?string
+    {
+        return $this->type_usage;
+    }
+
+    public function setTypeUsage(?string $type_usage): static
+    {
+        $this->type_usage = $type_usage;
+
+        return $this;
+    }
+
+    public function isMeubler(): ?bool
+    {
+        return $this->meubler;
+    }
+
+    public function setMeubler(?bool $meubler): static
+    {
+        $this->meubler = $meubler;
+
+        return $this;
+    }
 
 }
