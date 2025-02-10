@@ -45,6 +45,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'uploadedBy')]
     private Collection $documents;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $name = null;
+
 
     public function __construct()
     {
@@ -171,6 +174,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $document->setUploadedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

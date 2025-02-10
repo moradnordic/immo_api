@@ -38,6 +38,9 @@ class Agence
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'agence')]
     private Collection $users;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imageFilename = null;
+
     public function __construct()
     {
         $this->property = new ArrayCollection();
@@ -160,6 +163,17 @@ class Agence
             }
         }
 
+        return $this;
+    }
+    // Getters and Setters
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
         return $this;
     }
 

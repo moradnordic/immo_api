@@ -1,0 +1,13 @@
+{# templates/blogs/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau blog{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen bg-gray-50 py-8">
+        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Créer un nouvel article</h1>
+    {{ include('blogs/_form.html.twig') }}
+
+{% endblock %}

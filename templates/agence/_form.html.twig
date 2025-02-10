@@ -1,0 +1,162 @@
+{# _form.html.twig #}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+                    {# Name field #}
+                    <div class="mb-4">
+                        {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.name, {
+                            'attr': {
+                                'class': 'form-control form-control-lg',
+                                'placeholder': 'Entrez le nom'
+                            }
+                        }) }}
+                        {{ form_errors(form.name) }}
+                        <div class="form-text">Entrez le nom complet de l'agence</div>
+                    </div>
+
+                    {# Address field #}
+                    <div class="mb-4">
+                        {{ form_label(form.address, 'Adresse', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.address, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Entrez l\'adresse complète',
+                                'rows': '3'
+                            }
+                        }) }}
+                        {{ form_errors(form.address) }}
+                    </div>
+
+                    {# Phone field #}
+                    <div class="mb-4">
+                        {{ form_label(form.phone, 'Téléphone', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.phone, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': '+33 X XX XX XX XX',
+                                'pattern': '[0-9+ ]{10,}'
+                            }
+                        }) }}
+                        {{ form_errors(form.phone) }}
+                    </div>
+
+                    {# Email field #}
+                    <div class="mb-4">
+                        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.email, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'email@exemple.com',
+                                'type': 'email'
+                            }
+                        }) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                    <div class="mb-4">
+                        {% if agence.imageFilename %}
+                            <div class="mb-3">
+                                <img src="{{ asset('uploads/images/' ~ agence.imageFilename) }}"
+                                     alt="Current image"
+                                     class="img-thumbnail"
+                                     style="max-width: 200px">
+                            </div>
+                        {% endif %}
+
+                        {{ form_label(form.imageFile, 'Image de l\'agence', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        <div class="custom-file">
+                            {{ form_widget(form.imageFile, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'accept': 'image/jpeg,image/png'
+                                }
+                            }) }}
+                            {{ form_errors(form.imageFile) }}
+                            <div class="form-text">
+                                Format accepté : JPEG/PNG (max 5MB)
+                                {% if agence.imageFilename %}
+                                    <br>Laissez vide pour conserver l'image actuelle
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i>Enregistrer
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Add this CSS to your stylesheet #}
+<style>
+    .form-control:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .form-control.is-invalid:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    .btn-primary {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-body {
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+    .form-label {
+        color: #344767;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-text {
+        color: #67748e;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
+
+{# Add this JavaScript for form validation #}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.needs-validation');
+
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+</script>

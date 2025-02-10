@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'Adresse{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4 text-danger">Modifier l'Adresse</h1>
+
+                {{ include('address/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('app_address_index') }}" class="btn btn-outline-secondary">Retour à la liste</a>
+                    {{ include('address/_delete_form.html.twig', { 'class': 'btn btn-danger' }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

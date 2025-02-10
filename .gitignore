@@ -4,6 +4,8 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/public/images/
+/public/uploads/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -38,7 +40,6 @@
 /bin/*
 !bin/console
 !bin/symfony_requirements
-/vendor/
 
 # Assets and user uploads
 /web/bundles/
@@ -62,3 +63,7 @@
 
 .idea
 .env
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Adresse{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4 text-danger">Détails de l'Adresse</h1>
+
+                <table class="table table-borderless">
+                    <tbody>
+                    <tr>
+                        <th class="text-muted">Id</th>
+                        <td>{{ address.id }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Ville</th>
+                        <td>{{ address.ville }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Cartier</th>
+                        <td>{{ address.cartier }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('app_address_index') }}" class="btn btn-outline-secondary">Retour à la liste</a>
+                    <a href="{{ path('app_address_edit', {'id': address.id}) }}" class="btn btn-outline-warning">Modifier</a>
+                    {{ include('address/_delete_form.html.twig', { 'class': 'btn btn-danger' }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

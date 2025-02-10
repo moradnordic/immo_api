@@ -1,0 +1,57 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            {# Titre #}
+<div class="form-group">
+    {{ form_label(form.title, 'Titre', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+    {{ form_widget(form.title, {'attr': {
+        'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+        'placeholder': 'Entrez le titre de votre article'
+    }}) }}
+    {{ form_errors(form.title, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+</div>
+
+{# Contenu #}
+<div class="form-group">
+    {{ form_label(form.content, 'Contenu', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+    {{ form_widget(form.content, {'attr': {
+        'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[200px]',
+        'placeholder': 'Rédigez votre article ici'
+    }}) }}
+    {{ form_errors(form.content, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+</div>
+
+{# Image #}
+            {% if form.imageFile is defined %}
+                <div class="form-group">
+                    {{ form_label(form.imageFile, 'Image', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                    <div class="mt-1 flex items-center">
+                        {{ form_widget(form.imageFile, {'attr': {
+                            'class': 'px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                        }}) }}
+                    </div>
+                    {{ form_errors(form.imageFile, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+            {% endif %}
+
+<div class="flex justify-between items-center mt-8">
+    <a href="{{ path('app_blogs_index') }}"
+       class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Retour à la liste
+    </a>
+
+    <button type="submit"
+            class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        {{ button_label|default('Enregistrer') }}
+    </button>
+</div>
+{{ form_end(form) }}
+</div>
+</div>
+
+
+

@@ -16,6 +16,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use EasyCorp\Bundle\EasyAdminBundle\Field\VichImageField;
+
+
+
 
 class PropertyCrudController extends AbstractCrudController
 {
@@ -30,16 +34,18 @@ class PropertyCrudController extends AbstractCrudController
             IdField::new('id', 'ID')->hideOnForm(),                 // "id": 1
             TextField::new('type', 'Type de bien'),                 // "type": "Appartement"
 
-            // CollectionField for images (img array in JSON)
-            CollectionField::new('imageFiles', 'Télécharger des images')
-                ->setEntryType(VichImageType::class)
-                ->setFormTypeOptions([
-                    'entry_options' => ['label' => false],
-                    'allow_add' => true,
-                    'allow_delete' => true,
-                    'by_reference' => false,
-                ])->allowDelete()
+            // Field for image uploads
+            TextField::new('imageFiles', 'Images')
+                ->setFormType(VichImageType::class)
+                ->setHelp('Upload images for the property')
                 ->onlyOnForms(),
+
+            // Display uploaded images
+            ImageField::new('img', 'Uploaded Images')
+                ->setBasePath('/uploads/images')
+                ->setUploadDir('public/uploads/images')
+                ->setHelp('Images uploaded for this property')
+                ->onlyOnIndex(),
 
 
             TextField::new('thumbnail', 'Miniature')->onlyOnForms(),               // "thumbnail": "https://example.com/thumb1.jpg"

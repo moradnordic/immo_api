@@ -1,0 +1,562 @@
+
+{# Add this in your base template or include it here #}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    /* Main Container Styles */
+    .property-form-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form Section Styles */
+    .form-section {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        color: #1a365d;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #4299e1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Form Control Styles */
+    .form-control, .form-select {
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        background-color: #fff;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #4299e1;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        outline: none;
+    }
+
+    /* Label Styles */
+    .form-label {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .required-label::after {
+        content: '*';
+        color: #e53e3e;
+        margin-left: 4px;
+    }
+
+    /* Image Upload Styles */
+    .image-upload-container {
+        border: 2px dashed #cbd5e0;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+
+    .image-upload-container:hover {
+        border-color: #4299e1;
+        background: #ebf8ff;
+    }
+
+    .image-upload-icon {
+        font-size: 2rem;
+        color: #4299e1;
+        margin-bottom: 1rem;
+    }
+
+    .image-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .image-preview-item {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        aspect-ratio: 1;
+    }
+
+    .image-preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .image-preview-item:hover img {
+        transform: scale(1.05);
+    }
+
+    .image-delete-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(229, 62, 62, 0.9);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .image-delete-btn:hover {
+        background: #c53030;
+        transform: scale(1.1);
+    }
+
+    /* Button Styles */
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: #4299e1;
+        border: none;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #3182ce;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(66, 153, 225, 0.2);
+    }
+
+    .btn-secondary {
+        background: #718096;
+        border: none;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #4a5568;
+        transform: translateY(-1px);
+    }
+
+    /* Checkbox and Radio Styles */
+    .form-check {
+        padding-left: 1.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-left: -1.75rem;
+        background-color: #fff;
+        border: 2px solid #cbd5e0;
+    }
+
+    .form-check-input:checked {
+        background-color: #4299e1;
+        border-color: #4299e1;
+    }
+
+    /* Input Group Styles */
+    .input-group {
+        position: relative;
+    }
+
+    .input-group-text {
+        background-color: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        color: #4a5568;
+    }
+
+    /* Error State Styles */
+    .is-invalid {
+        border-color: #e53e3e;
+    }
+
+    .invalid-feedback {
+        color: #e53e3e;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    /* Animation Styles */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .property-form-container {
+            padding: 1rem;
+            margin: 1rem;
+        }
+
+        .form-section {
+            padding: 1rem;
+        }
+
+        .image-preview-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+    }
+</style>
+
+{# Form Template - I'll show a part of it with the new styles applied #}
+{{ form_start(form, {'attr': {'class': 'property-form-container needs-validation'}}) }}
+
+<div class="form-section fade-in">
+    <h3 class="section-title">
+        <i class="fas fa-info-circle"></i>
+        Informations principales
+    </h3>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.title, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.title, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Entrez le titre de la propriété'
+                }}) }}
+                {{ form_errors(form.title) }}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.type, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.type) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# After the first section, continuing with all other sections #}
+
+<div class="form-section fade-in">
+    <h3 class="section-title">
+        <i class="fas fa-align-left"></i>
+        Description et détails
+    </h3>
+    <div class="row g-4">
+        <div class="col-md-12">
+            <div class="form-group">
+                {{ form_label(form.description, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.description, {'attr': {
+                    'class': 'form-control',
+                    'rows': '4',
+                    'placeholder': 'Description détaillée de la propriété'
+                }}) }}
+                {{ form_errors(form.description) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.nbrEtage, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nbrEtage, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.nbrEtage) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section fade-in">
+    <h3 class="section-title">
+        <i class="fas fa-tag"></i>
+        Prix et Promotion
+    </h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form_label(form.price, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.price, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Prix en MAD'
+                }}) }}
+                {{ form_errors(form.price) }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form_label(form.promotion, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.promotion, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.promotion) }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form_label(form.prixPromo, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.prixPromo, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Prix promotionnel en MAD'
+                }}) }}
+                {{ form_errors(form.prixPromo) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section fade-in">
+    <h3 class="section-title">
+        <i class="fas fa-home"></i>
+        Caractéristiques
+    </h3>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.type_usage, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.type_usage, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.type_usage) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.propertyStatus, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.propertyStatus, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.propertyStatus) }}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                {{ form_label(form.surface, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.surface, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'm²'
+                }}) }}
+                {{ form_errors(form.surface) }}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                {{ form_label(form.rooms, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.rooms, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Nombre de chambres'
+                }}) }}
+                {{ form_errors(form.rooms) }}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                {{ form_label(form.beds, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.beds, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Nombre de lits'
+                }}) }}
+                {{ form_errors(form.beds) }}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                {{ form_label(form.bath, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.bath, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Nombre de salles de bain'
+                }}) }}
+                {{ form_errors(form.bath) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section fade-in">
+    <h3 class="section-title">
+        <i class="fas fa-map-marker-alt"></i>
+        Localisation
+    </h3>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.city, null, {'label_attr': {'class': 'form-label required-label'}}) }}
+                {{ form_widget(form.city, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.city) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.neighborhood, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.neighborhood, {'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Nom du quartier'
+                }}) }}
+                {{ form_errors(form.neighborhood) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section fade-in">
+    <h3 class="section-title">
+        <i class="fas fa-cog"></i>
+        Options supplémentaires
+    </h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="form-check">
+                {{ form_widget(form.meubler, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.meubler, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                {{ form_errors(form.meubler) }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-check">
+                {{ form_widget(form.sold, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.sold, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                {{ form_errors(form.sold) }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form_label(form.agence, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.agence, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.agence) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section fade-in">
+    <h3 class="section-title">
+        <i class="fas fa-images"></i>
+        Images
+    </h3>
+    <div class="image-upload-container" id="dropZone">
+        <i class="fas fa-cloud-upload-alt image-upload-icon"></i>
+        <p>Glissez et déposez vos images ici ou cliquez pour sélectionner</p>
+        {{ form_widget(form.imageFiles, {
+            'attr': {
+                'class': 'form-control',
+                'hidden': 'hidden'
+            }
+        }) }}
+    </div>
+
+    {% if property.img is defined and property.img|length > 0 %}
+        <div class="image-preview-grid">
+            {% for image in property.img %}
+                <div class="image-preview-item fade-in">
+                    <img src="{{ asset('uploads/images/' ~ image) }}" alt="Property image">
+                    <a href="{{ path('property_delete_image', {'id': property.id, 'image': image}) }}"
+                       class="image-delete-btn"
+                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette image?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<div class="form-actions mt-4 d-flex gap-3">
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i>
+        {{ button_label|default('Enregistrer') }}
+    </button>
+    <a href="{{ path('app_property_index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Retour à la liste
+    </a>
+</div>
+
+{{ form_end(form) }}
+
+<script>
+    // Preview images before upload
+    document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+        const preview = document.createElement('div');
+        preview.id = 'newImagesPreview';
+        preview.className = 'row mt-3';
+        preview.innerHTML = `
+        <div class="col-12">
+            <h5>Aperçu des nouvelles images</h5>
+            <div class="row" id="imagePreview"></div>
+        </div>
+    `;
+
+        // Remove existing preview if any
+        const existingPreview = this.parentElement.querySelector('#newImagesPreview');
+        if (existingPreview) {
+            existingPreview.remove();
+        }
+
+        this.parentElement.appendChild(preview);
+        const previewContainer = document.getElementById('imagePreview');
+
+        Array.from(this.files).forEach(file => {
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'col-md-3 mb-3';
+                    div.innerHTML = `
+                    <img src="${e.target.result}"
+                         class="img-thumbnail"
+                         style="width: 100%; height: 200px; object-fit: cover;">
+                `;
+                    previewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+    // Add drag and drop functionality
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.querySelector('input[type="file"]');
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        fileInput.files = e.dataTransfer.files;
+        // Trigger change event manually
+        const event = new Event('change');
+        fileInput.dispatchEvent(event);
+    });
+</script>
