@@ -40,6 +40,8 @@ class Blogs
     #[ORM\Column(type:"datetime", nullable:true)]
 
     private ?\DateTimeInterface $updatedAt = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $video = null;
 
     public function setImageFile(?File $imageFile = null): void
     {
@@ -127,6 +129,17 @@ class Blogs
     {
         $this->author = $author;
 
+        return $this;
+    }
+    // Add getter and setter for the video property
+    public function getVideo(): ?string
+    {
+        return $this->video;
+    }
+
+    public function setVideo(?string $video): self
+    {
+        $this->video = $video;
         return $this;
     }
 }

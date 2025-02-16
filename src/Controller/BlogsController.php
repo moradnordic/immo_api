@@ -8,6 +8,7 @@ use App\Repository\BlogsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,10 +17,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class BlogsController extends AbstractController
 {
     #[Route(name: 'app_blogs_index', methods: ['GET'])]
-    public function index(BlogsRepository $blogsRepository): Response
+    public function index(BlogsRepository $blogsRepository,Security $security): Response
     {
+        $user = $security->getUser();
         return $this->render('blogs/index.html.twig', [
             'blogs' => $blogsRepository->findAll(),
+            'user' => $user
         ]);
     }
 
@@ -35,6 +38,22 @@ final class BlogsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $videoFile */
+            $videoFile = $form->get('videoFile')->getData();
+
+            if ($videoFile) {
+                $newFilename = uniqid().'.'.$videoFile->guessExtension();
+
+                // Move the file to the directory where videos are stored
+                $videoFile->move(
+                    $this->getParameter('videos_directory'),
+                    $newFilename
+                );
+
+                // Update the video property with the file path
+                $blog->setVideo('/uploads/videos/'.$newFilename);
+            }
+
             // Set the current date and time
             $blog->setCreatedAt(new \DateTimeImmutable());
             // Set the current user as author
@@ -53,10 +72,11 @@ final class BlogsController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_blogs_show', methods: ['GET'])]
-    public function show(Blogs $blog): Response
+    public function show(Blogs $blog,Security $security): Response
     {
         return $this->render('blogs/show.html.twig', [
             'blog' => $blog,
+            'user' => $security->getUser()
         ]);
     }
 
@@ -86,7 +106,6 @@ final class BlogsController extends AbstractController
             $entityManager->remove($blog);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('app_blogs_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -59,12 +59,15 @@
                                         {{ blog.title }}
                                     </a>
                                 </h2>
+
                                 <div class="flex gap-2">
+                                    {% if is_granted('ROLE_ADMIN') or  user.name == blog.author  %}
                                     <a href="{{ path('app_blogs_edit', {'id': blog.id}) }}"
                                        class="text-gray-500 hover:text-blue-600 transition-colors duration-200"
                                        title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    {% endif %}
                                     <a href="{{ path('app_blogs_show', {'id': blog.id}) }}"
                                        class="text-gray-500 hover:text-blue-600 transition-colors duration-200"
                                        title="View">
