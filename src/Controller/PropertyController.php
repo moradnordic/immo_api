@@ -57,6 +57,7 @@ final class PropertyController extends AbstractController
             $images = $form->get('imageFiles')->getData(); // Use 'imageFiles' from the form
             $property->setCreatedAt(new DateTimeImmutable());
             $property->setCountry('maroc');
+            $property->setAgence($user->getAgence());
 
             if ($images) {
                 foreach ($images as $image) {
@@ -75,7 +76,6 @@ final class PropertyController extends AbstractController
                     $property->setImg($img);
                 }
             }
-//            dd($property);
             $entityManager->persist($property);
             $entityManager->flush();
 
