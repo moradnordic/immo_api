@@ -9,16 +9,18 @@
             <div class="bg-white rounded-lg shadow-md p-8 mb-6">
                 <div class="flex justify-between items-start mb-6">
                     <h1 class="text-3xl font-bold text-gray-900">{{ blog.title }}</h1>
-                    <div class="flex space-x-2">
-                        <a href="{{ path('app_blogs_edit', {'id': blog.id}) }}"
-                           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                            Modifier
-                        </a>
-                        {{ include('blogs/_delete_form.html.twig') }}
-                    </div>
+                    {% if is_granted('ROLE_ADMIN') or user.name == blog.author %}
+                        <div class="flex space-x-2">
+                            <a href="{{ path('app_blogs_edit', {'id': blog.id}) }}"
+                               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                                Modifier
+                            </a>
+                            {{ include('blogs/_delete_form.html.twig') }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 {# Métadonnées de l'article #}
@@ -44,6 +46,21 @@
                              alt="Image de {{ blog.title }}"
                              class="rounded-lg shadow-md w-full object-cover h-96">
                         <p class="text-sm text-gray-500 mt-2 text-center">Image: {{ blog.title }}</p>
+                    </div>
+                {% endif %}
+
+                {# Vidéo de l'article #}
+                {% if blog.video %}
+                    <div class="mb-8">
+                        <div class="relative overflow-hidden rounded-lg shadow-md" style="padding-top: 56.25%;">
+                            <iframe class="absolute top-0 left-0 w-full h-full"
+                                    src="{{ blog.video }}"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2 text-center">Vidéo: {{ blog.title }}</p>
                     </div>
                 {% endif %}
 
