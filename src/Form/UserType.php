@@ -21,6 +21,11 @@ class UserType extends AbstractType
                 'mapped' => false, // This prevents Symfony from automatically setting it on the entity
                 'required' => true,
                 'attr' => ['autocomplete' => 'new-password'], // Improves UX
+            ])
+            ->add('agence', EntityType::class, [
+                'class' => Agence::class,
+                'choice_label' => 'name',
+                'label' => 'Agence',
             ]);
     }
 
