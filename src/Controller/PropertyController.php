@@ -182,6 +182,7 @@ final class PropertyController extends AbstractController
 
         $data = [];
         foreach ($properties as $property) {
+            
             $agence = $agenceRepository->findById($property->getAgence()->getId());
 
             $data[] = [
@@ -245,5 +246,61 @@ final class PropertyController extends AbstractController
 
         return new JsonResponse($data);
     }
+    #[Route('/api/Search ', name: 'api_properties_Search', methods: ['GET'])]
+    public function apiIndex2(
+        PropertyRepository $propertyRepository,
+        AgenceRepository $agenceRepository,
+        Request $request
+    ): JsonResponse {
+        // Get search parameters from query string
+        $searchParams = [
+            'title' => $request->query->get('title'),
+            'minPrice' => $request->query->get('minPrice'),
+            'maxPrice' => $request->query->get('maxPrice'),
+            'type' => $request->query->get('type'),
+            'city' => $request->query->get('city'),
+            'neighborhood' => $request->query->get('neighborhood'),
+            'minRooms' => $request->query->get('minRooms'),
+            'minBeds' => $request->query->get('minBeds'),
+            'minBath' => $request->query->get('minBath'),
+            'minSurface' => $request->query->get('minSurface'),
+            'propertyStatus' => $request->query->get('propertyStatus'),
+            'agence' => $request->query->get('agence'),
+            'promotion' => $request->query->get('promotion'),
+        ];
 
+        // Find properties based on search criteria
+        $properties = $propertyRepository->findBySearchCriteria($searchParams);
+
+        $data = [];
+        foreach ($properties as $property) {
+            $agence = $agenceRepository->findById($property->getAgence()->getId());
+
+            $data[] = [
+                'id' => $property->getId(),
+                'title' => $property->getTitle(),
+                'description' => $property->getDescription(),
+                'price' => $property->getPrice(),
+                'promotion' => $property->getPromotion(),
+                'surface' => $property->getSurface(),
+                'rooms' => $property->getRooms(),
+                'beds' => $property->getBeds(),
+                'type' => $property->getType(),
+                'propertyStatus' => $property->getPropertyStatus(),
+                'prixPromo' => $property->getPrixPromo(),
+                'bath' => $property->getBath(),
+                'sold' => $property->getSold(),
+                'city' => $property->getCity(),
+                'neighborhood' => $property->getNeighborhood(),
+                'agencyName' => $agence[0]->getName(),
+                'agencyId' => $agence[0]->getId(),
+                'agencyIcon' => $agence[0]->getImageFilename(),
+                'images' => array_map(function($image) {
+                    return 'http://127.0.0.1:8000/uploads/images/' . $image;
+                }, $property->getImg()),
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
 }
