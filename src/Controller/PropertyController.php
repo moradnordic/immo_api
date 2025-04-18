@@ -219,7 +219,7 @@ final class PropertyController extends AbstractController
         $property= $property[0];
         $data = [];
             $agence = $agenceRepository->findById($property->getAgence()->getId());
-            $data[] = [
+            $data = [
                 'id' => $property->getId(),
                 'title' => $property->getTitle(),
                 'description' => $property->getDescription(),
