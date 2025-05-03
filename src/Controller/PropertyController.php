@@ -27,7 +27,9 @@ final class PropertyController extends AbstractController
             $properties = $propertyRepository->findAll(); // Admin gets all properties
         } else {
             $user = $security->getUser();
-            $properties = $propertyRepository->findBy(['agence' => $user->getAgence()]); // Non-admin gets only their agency's properties
+
+            $properties = $propertyRepository->findBy(['agence' => $user->getAgence()]);
+
         }
 
         return $this->render('property/index.html.twig', [

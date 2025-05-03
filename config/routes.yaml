@@ -9,3 +9,6 @@ easy_admin_bundle:
     prefix: /admin
 api_login_check:
     path: /api/login_check
+index:
+    path: /
+    controller: App\Controller\PropertyController::index
