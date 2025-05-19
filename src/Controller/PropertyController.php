@@ -44,7 +44,10 @@ final class PropertyController extends AbstractController
 
         $property = new Property();
         $user = $security->getUser(); // Get the currently logged-in user
-
+//        $classMetadata = $entityManager->getClassMetadata(Property::class);
+//        $fields = $classMetadata->getFieldNames();
+//
+//        dd($fields); // Dump all field names
         // Assuming the `User` entity has a relation to `Agence`
         $agence = $user->getAgence(); // Get the user's associated agence
 

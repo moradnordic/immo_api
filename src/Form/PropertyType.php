@@ -8,11 +8,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class PropertyType extends AbstractType
 {
@@ -86,115 +89,527 @@ class PropertyType extends AbstractType
         '49ème étage' => 49,
         '50ème étage' => 50,
     ];
+
+    private $orientationChoices = [
+        'Nord' => 'nord',
+        'Sud' => 'sud',
+        'Est' => 'est',
+        'Ouest' => 'ouest',
+        'Nord-Est' => 'nord-est',
+        'Nord-Ouest' => 'nord-ouest',
+        'Sud-Est' => 'sud-est',
+        'Sud-Ouest' => 'sud-ouest',
+    ];
+
+    private $etatChoices = [
+        'Neuf' => 'neuf',
+        'Bon état' => 'bon_etat',
+        'À rénover' => 'a_renover',
+        'En construction' => 'en_construction',
+    ];
+
+    private $facadeChoices = [
+        'Cour' => 'cour',
+        'Rue' => 'rue',
+        'Jardin' => 'jardin',
+        'Vue mer' => 'vue_mer',
+        'Vue montagne' => 'vue_montagne',
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $user = $options['user']; // Get the user passed from the controller
         $agence = $options['agence']; // Get the agence passed from the controller
-$builder
-    ->add('title', null, [
-        'label' => 'Titre',
-    ])
-    ->add('description', null, [
-        'label' => 'Description',
-    ])
-    ->add('nbrEtage', ChoiceType::class, [
-        'label' => 'Numéro d\'étage',
-        'placeholder' => 'Numéro d\'étage',
-        'choices' =>$this->etage,
-        'required' => false, // Make it optional if needed
-        ])
-    ->add('price', null, [
-        'label' => 'Prix',
-    ])
-    ->add('promotion', ChoiceType::class, [
-        'choices' => [
-            'Aucune promotion' => 'aucune_promotion',
-            'Promotion spéciale' => 'promotion_speciale',
-            'Offre limitée' => 'offre_limitee',
-        ],
-        'label' => 'Promotion',
-        'attr' => ['class' => 'form-control'],
-        'placeholder' => 'Sélectionnez une promotion',
-    ])
-    ->add('surface', null, [
-        'label' => 'Surface',
-    ])
-    ->add('rooms', null, [
-        'label' => 'Chambres',
-    ])
-    ->add('beds', null, [
-        'label' => 'Lits',
-    ])
-    ->add('type', ChoiceType::class, [
-        'choices' => [
-            'Appartement' => 'appartement',
-            'Maison' => 'maison',
-            'Ferme' => 'ferme',
-            'Villa' => 'villa',
-        ],
-        'label' => 'Type de propriété',
-        'attr' => ['class' => 'form-control'],
-        'placeholder' => 'Sélectionnez un type',
-    ])
-    ->add('type_usage', ChoiceType::class, [
-        'choices' => [
-            'Habitation' => 'habitation',
-            'Commerciale' => 'commerciale',
-            'Professionnelle' => 'professionnelle',
-        ],
-        'label' => 'Type d\'usage'
-    ])
-    ->add('meubler')
-    ->add('propertyStatus', ChoiceType::class, [
-        'choices' => [
-            'En vente' => 'en_vente',
-            'À louer (vacances)' => 'a_louer_vacances',
-            'À louer (long terme)' => 'a_louer_long_terme',
-        ],
-        'label' => 'Statut de la propriété',
-        'attr' => ['class' => 'form-control'],
-        'placeholder' => 'Sélectionnez un statut',
-    ])
-    ->add('prixPromo', NumberType::class, [
-        'label' => 'Prix Promotionnel',
-        'attr' => ['class' => 'form-control'],
-        'required' => false,
-    ])
-    ->add('bath', null, [
-        'label' => 'Salles de bain',
-    ])
-    ->add('sold', CheckboxType::class, [
-        'label' => 'Vendu',
-        'required' => false,
-    ])
-    ->add('imageFiles', FileType::class, [
-        'multiple' => true,
-        'label' => 'Fichiers d\'image',
-        'attr' => [
-            'accept' => 'image/*',
-            'multiple' => 'multiple',
-        ],
-    ])
 
-    ->add('city', ChoiceType::class, [
-        'choices' => $this->marocCity,
-        'label' => 'Ville',
-        'attr' => ['class' => 'form-control'],
-        'placeholder' => 'Sélectionnez une ville',
-    ])
-    ->add('neighborhood', TextType::class, [
-        'label' => 'Quartier',
-        'attr' => ['class' => 'form-control'],
-    ])
-    ->add('agence', EntityType::class, [
-        'class' => Agence::class,
-        'choice_label' => 'name',
-        'label' => 'Agence',
-        'data' => $agence,
-        'disabled' => true,
-    ])
-;
+        // Common fields (always visible)
+        $builder
+            ->add('title', null, [
+                'label' => 'Titre',
+                'attr' => ['class' => 'common-field'],
+            ])
+            ->add('description', null, [
+                'label' => 'Description',
+                'attr' => ['class' => 'common-field'],
+            ])
+            ->add('price', null, [
+                'label' => 'Prix',
+                'attr' => ['class' => 'common-field'],
+            ])
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    'Appartement' => 'appartement',
+                    'Maison' => 'maison',
+                    'Ferme' => 'ferme',
+                    'Villa' => 'villa',
+                    'Bureau' => 'bureau',
+                    'Magasin' => 'magasin',
+                ],
+                'label' => 'Type de propriété',
+                'attr' => [
+                    'class' => 'form-control property-type-select common-field',
+                    'data-property-type-selector' => 'true',
+                ],
+                'placeholder' => 'Sélectionnez un type',
+            ])
+            ->add('propertyStatus', ChoiceType::class, [
+                'choices' => [
+                    'En vente' => 'en_vente',
+                    'À louer (vacances)' => 'a_louer_vacances',
+                    'À louer (long terme)' => 'a_louer_long_terme',
+                ],
+                'label' => 'Statut de la propriété',
+                'attr' => ['class' => 'form-control common-field'],
+                'placeholder' => 'Sélectionnez un statut',
+            ])
+            ->add('ageBien', IntegerType::class, [
+                'label' => 'Âge du bien',
+                'required' => false,
+                'attr' => ['class' => 'common-field'],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'L\'âge du bien ne peut pas être négatif.',
+                    ]),
+                ],
+            ])
+            ->add('promotion', ChoiceType::class, [
+                'choices' => [
+                    'Aucune promotion' => 'aucune_promotion',
+                    'Promotion spéciale' => 'promotion_speciale',
+                    'Offre limitée' => 'offre_limitee',
+                ],
+                'label' => 'Promotion',
+                'attr' => ['class' => 'form-control common-field'],
+                'placeholder' => 'Sélectionnez une promotion',
+            ])
+            ->add('prixPromo', NumberType::class, [
+                'label' => 'Prix Promotionnel',
+                'attr' => ['class' => 'form-control common-field'],
+                'required' => false,
+            ])
+            ->add('type_usage', ChoiceType::class, [
+                'choices' => [
+                    'Habitation' => 'habitation',
+                    'Commerciale' => 'commerciale',
+                    'Professionnelle' => 'professionnelle',
+                ],
+                'label' => 'Type d\'usage',
+                'attr' => ['class' => 'common-field'],
+            ])
+            ->add('surface', null, [
+                'label' => 'Surface',
+                'attr' => ['class' => 'common-field'],
+            ])
+            ->add('city', ChoiceType::class, [
+                'choices' => $this->marocCity,
+                'label' => 'Ville',
+                'attr' => ['class' => 'form-control common-field'],
+                'placeholder' => 'Sélectionnez une ville',
+            ])
+            ->add('neighborhood', TextType::class, [
+                'label' => 'Quartier',
+                'attr' => ['class' => 'form-control common-field'],
+            ])
+            ->add('agence', EntityType::class, [
+                'class' => Agence::class,
+                'choice_label' => 'name',
+                'label' => 'Agence',
+                'data' => $agence,
+                'disabled' => true,
+                'attr' => ['class' => 'common-field'],
+            ])
+            ->add('sold', CheckboxType::class, [
+                'label' => 'Vendu',
+                'required' => false,
+                'attr' => ['class' => 'common-field'],
+            ])
+            ->add('imageFiles', FileType::class, [
+                'multiple' => true,
+                'label' => 'Fichiers d\'image',
+                'attr' => [
+                    'accept' => 'image/*',
+                    'multiple' => 'multiple',
+                    'class' => 'common-field',
+                ],
+                'required' => false,
+            ]);
 
+        // Appartement specific fields
+        $builder
+            ->add('rooms', null, [
+                'label' => 'Chambres',
+                'attr' => ['class' => 'appartement-field'],
+                'required' => false,
+            ])
+            ->add('beds', null, [
+                'label' => 'Lits',
+                'attr' => ['class' => 'appartement-field'],
+                'required' => false,
+            ])
+            ->add('bath', null, [
+                'label' => 'Salles de bain',
+                'attr' => ['class' => 'appartement-field'],
+                'required' => false,
+            ])
+            ->add('nbrEtage', ChoiceType::class, [
+                'label' => 'Numéro d\'étage',
+                'placeholder' => 'Numéro d\'étage',
+                'choices' => $this->etage,
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('meubler', CheckboxType::class, [
+                'label' => 'Meublé',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('concierge', CheckboxType::class, [
+                'label' => 'Concierge',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('residenceSurveillee', CheckboxType::class, [
+                'label' => 'Résidence surveillée',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('charges', IntegerType::class, [
+                'label' => 'Charges',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('etat', ChoiceType::class, [
+                'label' => 'État',
+                'choices' => $this->etatChoices,
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+                'placeholder' => 'Sélectionnez un état',
+            ])
+            ->add('orientation', ChoiceType::class, [
+                'label' => 'Orientation',
+                'choices' => $this->orientationChoices,
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+                'placeholder' => 'Sélectionnez une orientation',
+            ])
+            ->add('chauffageIndividuel', CheckboxType::class, [
+                'label' => 'Chauffage individuel',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('hauteur', IntegerType::class, [
+                'label' => 'Hauteur (cm)',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('ascenseur', CheckboxType::class, [
+                'label' => 'Ascenseur',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('facadePrincipale', ChoiceType::class, [
+                'label' => 'Façade principale',
+                'choices' => $this->facadeChoices,
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+                'placeholder' => 'Sélectionnez une façade',
+            ])
+            ->add('climatisation', CheckboxType::class, [
+                'label' => 'Climatisation',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ])
+            ->add('dpeKwh', IntegerType::class, [
+                'label' => 'Diagnostic de performance énergétique (kWh/m²/an)',
+                'required' => false,
+                'attr' => ['class' => 'appartement-field'],
+            ]);
+
+        // Maison/Villa specific fields
+        $builder
+            ->add('nombreNiveaux', IntegerType::class, [
+                'label' => 'Nombre de niveaux',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('surfaceTerrain', IntegerType::class, [
+                'label' => 'Surface terrain (m²)',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('surfaceConstruite', IntegerType::class, [
+                'label' => 'Surface construite (m²)',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('terrasse', CheckboxType::class, [
+                'label' => 'Terrasse',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('balcon', CheckboxType::class, [
+                'label' => 'Balcon',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('parkingAbrite', CheckboxType::class, [
+                'label' => 'Place de parking abritée',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('parkingExterieur', CheckboxType::class, [
+                'label' => 'Place de parking extérieure',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('climatisation', CheckboxType::class, [
+                'label' => 'Climatisation',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('piscine', CheckboxType::class, [
+                'label' => 'Piscine',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('jardin', CheckboxType::class, [
+                'label' => 'Jardin',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('energiePhotovoltaique', CheckboxType::class, [
+                'label' => 'Énergie photovoltaïque',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('orientation', ChoiceType::class, [
+                'label' => 'Orientation',
+                'choices' => $this->orientationChoices,
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+                'placeholder' => 'Sélectionnez une orientation',
+            ])
+            ->add('chauffageIndividuel', CheckboxType::class, [
+                'label' => 'Chauffage individuel',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('logeDomestique', CheckboxType::class, [
+                'label' => 'Loge / Pièce domestique',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('debarras', CheckboxType::class, [
+                'label' => 'Débarras',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('dpeKwh', IntegerType::class, [
+                'label' => 'Diagnostic de performance énergétique (kWh/m²/an)',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('dpeCo2', IntegerType::class, [
+                'label' => 'Diagnostic de performance énergétique (CO₂/m²/an)',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('dateConstruction', DateType::class, [
+                'label' => 'Date de construction',
+                'widget' => 'single_text',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('dateRenovation', DateType::class, [
+                'label' => 'Date de dernière rénovation',
+                'widget' => 'single_text',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('camera', CheckboxType::class, [
+                'label' => 'Caméra',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('alarme', CheckboxType::class, [
+                'label' => 'Alarme',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ])
+            ->add('residenceFermee', CheckboxType::class, [
+                'label' => 'Résidence fermée',
+                'required' => false,
+                'attr' => ['class' => 'maison-villa-field'],
+            ]);
+
+        // Bureau specific fields
+        $builder
+            ->add('surfaceConstruite', IntegerType::class, [
+                'label' => 'Surface Construite (m²)',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('surfaceHabitable', IntegerType::class, [
+                'label' => 'Surface Habitable (m²)',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('openSpace', CheckboxType::class, [
+                'label' => 'Open Space',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('cloisonDur', CheckboxType::class, [
+                'label' => 'Cloison en Dur',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('parking', CheckboxType::class, [
+                'label' => 'Place Parking',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('cuisine', CheckboxType::class, [
+                'label' => 'Cuisine',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('wc', CheckboxType::class, [
+                'label' => 'WC',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('nbrEtage', ChoiceType::class, [
+                'label' => 'Étage',
+                'placeholder' => 'Sélectionnez un étage',
+                'choices' => $this->etage,
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('immeubleBureau', CheckboxType::class, [
+                'label' => 'Immeuble Bureau',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('immeubleMixte', CheckboxType::class, [
+                'label' => 'Immeuble Mixte',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('ascenseur', CheckboxType::class, [
+                'label' => 'Ascenseur',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('chauffage', CheckboxType::class, [
+                'label' => 'Chauffage',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('climatisation', CheckboxType::class, [
+                'label' => 'Climatisation',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('entrepot', CheckboxType::class, [
+                'label' => 'Entrepôt',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ])
+            ->add('charges', IntegerType::class, [
+                'label' => 'Charges',
+                'required' => false,
+                'attr' => ['class' => 'bureau-field'],
+            ]);
+
+        // Magasin specific fields
+        $builder
+            ->add('surface', null, [
+                'label' => 'Surface (m²)',
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('nombreNiveaux', IntegerType::class, [
+                'label' => 'Nombre de niveaux',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('neuf', CheckboxType::class, [
+                'label' => 'Neuf',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('aRenover', CheckboxType::class, [
+                'label' => 'À rénover',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('doubleVitrine', CheckboxType::class, [
+                'label' => 'Double vitrine',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('extractionFumee', CheckboxType::class, [
+                'label' => 'Extraction fumée',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('climatisation', CheckboxType::class, [
+                'label' => 'Climatisation',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('chauffage', CheckboxType::class, [
+                'label' => 'Chauffage',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('charges', IntegerType::class, [
+                'label' => 'Charges',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('dpeKwh', IntegerType::class, [
+                'label' => 'Consommation (kWh/m²/an)',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('dpeCo2', IntegerType::class, [
+                'label' => 'Émission (CO2/m²/an)',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('wc', CheckboxType::class, [
+                'label' => 'WC',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('entrepot', CheckboxType::class, [
+                'label' => 'Entrepôt',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('detecteurIncendie', CheckboxType::class, [
+                'label' => 'Détecteur incendie',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('systemeSecurite', CheckboxType::class, [
+                'label' => 'Système de sécurité',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('dateConstruction', DateType::class, [
+                'label' => 'Construit en',
+                'widget' => 'single_text',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ])
+            ->add('dateRenovation', DateType::class, [
+                'label' => 'Rénové en',
+                'widget' => 'single_text',
+                'required' => false,
+                'attr' => ['class' => 'magasin-field'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
