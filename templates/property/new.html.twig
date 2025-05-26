@@ -3,10 +3,17 @@
 {% block title %}Créer une nouvelle propriété{% endblock %}
 
 {% block body %}
+    <style>
+        /* Make sure your CSS has enough specificity */
+        .property-form-container .maison-field {
+            background-color: #fff3cd !important;
+            border-color: #ffeaa7 !important;
+        }
+    </style>
     <div class="container my-4">
         <h1 class="mb-4">Créer une nouvelle propriété</h1>
 
-        {{ include('property/_from1.html.twig', {'button_label': 'Enregistrer'}) }}
+        <twig:PropertyFrom/>
 
         <div class="mt-4">
             <a href="{{ path('app_property_index') }}" class="btn btn-secondary">

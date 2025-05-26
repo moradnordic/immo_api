@@ -1,0 +1,308 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Propriété - Étape 3{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Progress Bar -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="progress-wrapper">
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-success"><i class="fas fa-check me-1"></i>1. Informations générales</small>
+                                <small class="text-success"><i class="fas fa-check me-1"></i>2. Détails spécifiques</small>
+                                <small class="text-primary fw-bold">3. Images</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Card -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Résumé de votre propriété</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Titre:</strong> {{ step1Data.title ?? 'Non défini' }}</p>
+                                <p><strong>Type:</strong> {{ step1Data.type ?? 'Non défini' }}</p>
+                                <p><strong>Prix:</strong> {{ step1Data.price ?? 0 }} MAD</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Ville:</strong> {{ step1Data.city ?? 'Non définie' }}</p>
+                                <p><strong>Surface:</strong> {{ step1Data.surface ?? 0 }} m²</p>
+                                <p><strong>Statut:</strong> {{ step1Data.propertyStatus ?? 'Non défini' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Card -->
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-images me-2"></i>
+                            Étape 3 : Images de la propriété
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+
+                        <div class="form-section">
+                            <div class="image-upload-container" id="dropZone">
+                                <div class="upload-icon-wrapper">
+                                    <i class="fas fa-cloud-upload-alt image-upload-icon"></i>
+                                </div>
+                                <h5 class="upload-title">Ajoutez vos images</h5>
+                                <p class="upload-subtitle">Glissez et déposez vos images ici ou cliquez pour sélectionner</p>
+                                <p class="upload-info text-muted">
+                                    <small>Formats acceptés: JPEG, PNG, GIF, WebP • Taille max: 5MB par image</small>
+                                </p>
+                                {{ form_widget(form.imageFiles, {
+                                    'attr': {
+                                        'class': 'form-control d-none',
+                                        'id': 'imageFilesInput'
+                                    }
+                                }) }}
+                                <button type="button" class="btn btn-outline-primary mt-3" id="selectFilesBtn">
+                                    <i class="fas fa-plus me-2"></i>Sélectionner des images
+                                </button>
+                            </div>
+                            {{ form_errors(form.imageFiles) }}
+
+                            <!-- Image Preview Container -->
+                            <div id="imagePreviewContainer" class="mt-4 d-none">
+                                <h6 class="text-primary"><i class="fas fa-eye me-2"></i>Aperçu des images sélectionnées</h6>
+                                <div id="imagePreviewGrid" class="image-preview-grid"></div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('app_property_back_to_step2') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Précédent
+                            </a>
+                            <div>
+                                <a href="{{ path('app_property_new_cancel') }}" class="btn btn-secondary me-2">
+                                    <i class="fas fa-times me-2"></i>Annuler
+                                </a>
+                                <button type="submit" class="btn btn-success" id="submitBtn">
+                                    <i class="fas fa-check me-2"></i>Créer la propriété
+                                </button>
+                            </div>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .progress-wrapper .progress {
+            border-radius: 10px;
+        }
+
+        .image-upload-container {
+            border: 3px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-upload-container:hover {
+            border-color: #0d6efd;
+            background: #e7f3ff;
+        }
+
+        .image-upload-container.dragover {
+            border-color: #0d6efd;
+            background: #e7f3ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .image-upload-icon {
+            font-size: 3rem;
+            color: #6c757d;
+            transition: color 0.3s ease;
+        }
+
+        .image-upload-container:hover .image-upload-icon {
+            color: #0d6efd;
+        }
+
+        .upload-title {
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtitle {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-info {
+            font-size: 0.875rem;
+        }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-preview-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .image-preview-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .image-remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: background 0.2s ease;
+        }
+
+        .image-remove-btn:hover {
+            background: #dc3545;
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid #dee2e6;
+        }
+
+        #submitBtn:disabled {
+            opacity: 0.6;
+        }
+
+        .loading {
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            margin-left: 0.5rem;
+            border: 2px solid transparent;
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+        <script>
+            // Preview images before upload
+            document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            const preview = document.createElement('div');
+            preview.id = 'newImagesPreview';
+            preview.className = 'row mt-3';
+            preview.innerHTML = `
+        <div class="col-12">
+            <h5>Aperçu des nouvelles images</h5>
+            <div class="row" id="imagePreview"></div>
+        </div>
+    `;
+
+            // Remove existing preview if any
+            const existingPreview = this.parentElement.querySelector('#newImagesPreview');
+            if (existingPreview) {
+            existingPreview.remove();
+        }
+
+            this.parentElement.appendChild(preview);
+            const previewContainer = document.getElementById('imagePreview');
+
+            Array.from(this.files).forEach(file => {
+            if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'col-md-3 mb-3';
+            div.innerHTML = `
+                    <img src="${e.target.result}"
+                         class="img-thumbnail"
+                         style="width: 100%; height: 200px; object-fit: cover;">
+                `;
+            previewContainer.appendChild(div);
+        };
+            reader.readAsDataURL(file);
+        }
+        });
+        });
+
+            // Add drag and drop functionality
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.querySelector('input[type="file"]');
+
+            dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+            dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+            dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+            dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            // Trigger change event manually
+            const event = new Event('change');
+            fileInput.dispatchEvent(event);
+        });
+    </script>
+{% endblock %}

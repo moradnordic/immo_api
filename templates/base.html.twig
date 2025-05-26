@@ -93,6 +93,7 @@
     </style>
 
     {% block javascripts %}{% endblock %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
 </head>
 <body class="antialiased">
 <!-- Navigation -->

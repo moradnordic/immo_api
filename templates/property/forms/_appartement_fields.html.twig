@@ -1,0 +1,162 @@
+<!-- Appartement Specific Fields -->
+<div class="row">
+    <!-- Basic Info Section -->
+    <div class="col-12 mb-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-home me-2 text-primary"></i>Informations de base
+        </h6>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="form-group">
+            {{ form_label(form.rooms, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.rooms, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+            {{ form_errors(form.rooms) }}
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="form-group">
+            {{ form_label(form.bath, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.bath, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+            {{ form_errors(form.bath) }}
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="form-group">
+            {{ form_label(form.nbrEtage, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.nbrEtage, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.nbrEtage) }}
+        </div>
+    </div>
+
+    <!-- État et Orientation Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-compass me-2 text-primary"></i>État et Orientation
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.etat, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.etat, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.etat) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.orientation, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.orientation, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.orientation) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.facadePrincipale, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.facadePrincipale, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.facadePrincipale) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.hauteur, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            <div class="input-group">
+                {{ form_widget(form.hauteur, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                <span class="input-group-text">cm</span>
+            </div>
+            {{ form_errors(form.hauteur) }}
+        </div>
+    </div>
+
+    <!-- Charges et Performance Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-euro-sign me-2 text-primary"></i>Charges et Performance
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.charges, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            <div class="input-group">
+                {{ form_widget(form.charges, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                <span class="input-group-text">MAD</span>
+            </div>
+            {{ form_errors(form.charges) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.dpeKwh, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            <div class="input-group">
+                {{ form_widget(form.dpeKwh, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                <span class="input-group-text">kWh/m²/an</span>
+            </div>
+            {{ form_errors(form.dpeKwh) }}
+        </div>
+    </div>
+
+    <!-- Équipements Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-cogs me-2 text-primary"></i>Équipements et Services
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.meubler, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.meubler, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.concierge, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.concierge, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.ascenseur, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.ascenseur, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.climatisation, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.climatisation, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.residenceSurveillee, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.residenceSurveillee, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.chauffageIndividuel, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.chauffageIndividuel, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

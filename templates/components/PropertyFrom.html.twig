@@ -1,0 +1,12 @@
+<div{{ attributes }}>
+    {{ form_start(form, {'attr': {'class': 'property-form-container needs-validation'}}) }}
+
+    {{ form_row(form.type) }}
+
+    {% if form.rooms is defined %}
+        <div class="alert alert-success">✅ Rooms field found</div>
+        {{ form_row(form.rooms) }}
+    {% endif %}
+
+    {{ form_end(form) }}
+</div>
