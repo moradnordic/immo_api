@@ -3,218 +3,479 @@
 {% block title %}Nouvelle Propriété - Étape 1{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <!-- Progress Bar -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="progress-wrapper">
-                            <div class="progress mb-3" style="height: 10px;">
-                                <div class="progress-bar bg-primary" role="progressbar"
-                                     style="width: 33.33%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-primary fw-bold">1. Informations générales</small>
-                                <small class="text-muted">2. Détails spécifiques</small>
-                                <small class="text-muted">3. Images</small>
-                            </div>
-                        </div>
+    <div class="property-form-container">
+        <div class="form-wrapper">
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 33.33%"></div>
+                    </div>
+                </div>
+                <div class="progress-steps">
+                    <span class="step active">1. Informations générales</span>
+                    <span class="step">2. Détails spécifiques</span>
+                    <span class="step">3. Images</span>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-card">
+                <div class="form-header">
+                    <div class="header-content">
+                        <i class="icon-home"></i>
+                        <h2>Étape 1 : Informations générales</h2>
                     </div>
                 </div>
 
-                <!-- Form Card -->
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">
-                            <i class="fas fa-home me-2"></i>
-                            Étape 1 : Informations générales
-                        </h4>
+                <div class="form-body">
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'property-form'}}) }}
+
+                    <!-- Title Field -->
+                    <div class="field-group full-width">
+                        {{ form_label(form.title, null, {'label_attr': {'class': 'field-label'}}) }}
+                        {{ form_widget(form.title, {'attr': {'class': 'field-input', 'placeholder': 'Ex: Appartement moderne avec vue mer'}}) }}
+                        {{ form_errors(form.title) }}
                     </div>
-                    <div class="card-body">
-                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-                        <div class="row">
-                            <!-- Title -->
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.title, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.title, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Appartement moderne avec vue mer'}}) }}
-                                    {{ form_errors(form.title) }}
-                                </div>
+                    <!-- Description Field -->
+                    <div class="field-group full-width">
+                        {{ form_label(form.description, null, {'label_attr': {'class': 'field-label'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'field-textarea', 'placeholder': 'Décrivez votre propriété...', 'rows': 4}}) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+
+                    <!-- Price and Type Row -->
+                    <div class="field-row">
+                        <div class="field-group">
+                            {{ form_label(form.price, null, {'label_attr': {'class': 'field-label'}}) }}
+                            <div class="input-with-suffix">
+                                {{ form_widget(form.price, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                <span class="input-suffix">MAD</span>
                             </div>
+                            {{ form_errors(form.price) }}
+                        </div>
+                        <div class="field-group">
+                            {{ form_label(form.type, null, {'label_attr': {'class': 'field-label'}}) }}
+                            {{ form_widget(form.type, {'attr': {'class': 'field-select'}}) }}
+                            {{ form_errors(form.type) }}
+                        </div>
+                    </div>
 
-                            <!-- Description -->
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.description, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez votre propriété...', 'rows': 4}}) }}
-                                    {{ form_errors(form.description) }}
-                                </div>
+                    <!-- Status and Usage Row -->
+                    <div class="field-row">
+                        <div class="field-group">
+                            {{ form_label(form.propertyStatus, null, {'label_attr': {'class': 'field-label'}}) }}
+                            {{ form_widget(form.propertyStatus, {'attr': {'class': 'field-select'}}) }}
+                            {{ form_errors(form.propertyStatus) }}
+                        </div>
+                        <div class="field-group">
+                            {{ form_label(form.type_usage, null, {'label_attr': {'class': 'field-label'}}) }}
+                            {{ form_widget(form.type_usage, {'attr': {'class': 'field-select'}}) }}
+                            {{ form_errors(form.type_usage) }}
+                        </div>
+                    </div>
+
+                    <!-- Surface and Age Row -->
+                    <div class="field-row">
+                        <div class="field-group">
+                            {{ form_label(form.surface, null, {'label_attr': {'class': 'field-label'}}) }}
+                            <div class="input-with-suffix">
+                                {{ form_widget(form.surface, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                <span class="input-suffix">m²</span>
                             </div>
-
-                            <!-- Price and Property Type -->
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.price, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    <div class="input-group">
-                                        {{ form_widget(form.price, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
-                                        <span class="input-group-text">MAD</span>
-                                    </div>
-                                    {{ form_errors(form.price) }}
-                                </div>
+                            {{ form_errors(form.surface) }}
+                        </div>
+                        <div class="field-group">
+                            {{ form_label(form.ageBien, null, {'label_attr': {'class': 'field-label'}}) }}
+                            <div class="input-with-suffix">
+                                {{ form_widget(form.ageBien, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                <span class="input-suffix">ans</span>
                             </div>
+                            {{ form_errors(form.ageBien) }}
+                        </div>
+                    </div>
 
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.type, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
-                                    {{ form_errors(form.type) }}
-                                </div>
+                    <!-- City and Neighborhood Row -->
+                    <div class="field-row">
+                        <div class="field-group">
+                            {{ form_label(form.city, null, {'label_attr': {'class': 'field-label'}}) }}
+                            {{ form_widget(form.city, {'attr': {'class': 'field-select'}}) }}
+                            {{ form_errors(form.city) }}
+                        </div>
+                        <div class="field-group">
+                            {{ form_label(form.neighborhood, null, {'label_attr': {'class': 'field-label'}}) }}
+                            {{ form_widget(form.neighborhood, {'attr': {'class': 'field-input', 'placeholder': 'Ex: Centre-ville, Agdal...'}}) }}
+                            {{ form_errors(form.neighborhood) }}
+                        </div>
+                    </div>
+
+                    <!-- Promotion Section -->
+                    <div class="promotion-section">
+                        <div class="promotion-header">
+                            <i class="icon-percentage"></i>
+                            <h3>Promotions (Optionnel)</h3>
+                        </div>
+                        <div class="field-row">
+                            <div class="field-group">
+                                {{ form_label(form.promotion, null, {'label_attr': {'class': 'field-label'}}) }}
+                                {{ form_widget(form.promotion, {'attr': {'class': 'field-select'}}) }}
+                                {{ form_errors(form.promotion) }}
                             </div>
-
-                            <!-- Property Status and Usage Type -->
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.propertyStatus, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.propertyStatus, {'attr': {'class': 'form-select'}}) }}
-                                    {{ form_errors(form.propertyStatus) }}
+                            <div class="field-group">
+                                {{ form_label(form.prixPromo, null, {'label_attr': {'class': 'field-label'}}) }}
+                                <div class="input-with-suffix">
+                                    {{ form_widget(form.prixPromo, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                    <span class="input-suffix">MAD</span>
                                 </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.type_usage, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.type_usage, {'attr': {'class': 'form-select'}}) }}
-                                    {{ form_errors(form.type_usage) }}
-                                </div>
-                            </div>
-
-                            <!-- Surface and Age -->
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.surface, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    <div class="input-group">
-                                        {{ form_widget(form.surface, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
-                                        <span class="input-group-text">m²</span>
-                                    </div>
-                                    {{ form_errors(form.surface) }}
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.ageBien, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    <div class="input-group">
-                                        {{ form_widget(form.ageBien, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
-                                        <span class="input-group-text">ans</span>
-                                    </div>
-                                    {{ form_errors(form.ageBien) }}
-                                </div>
-                            </div>
-
-                            <!-- City and Neighborhood -->
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.city, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.city, {'attr': {'class': 'form-select'}}) }}
-                                    {{ form_errors(form.city) }}
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.neighborhood, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.neighborhood, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Centre-ville, Agdal...'}}) }}
-                                    {{ form_errors(form.neighborhood) }}
-                                </div>
-                            </div>
-
-                            <!-- Promotion Section -->
-                            <div class="col-md-12 mb-3">
-                                <div class="card bg-light">
-                                    <div class="card-header bg-warning text-dark">
-                                        <h6 class="mb-0"><i class="fas fa-percentage me-2"></i>Promotions (Optionnel)</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                {{ form_label(form.promotion, null, {'label_attr': {'class': 'form-label'}}) }}
-                                                {{ form_widget(form.promotion, {'attr': {'class': 'form-select'}}) }}
-                                                {{ form_errors(form.promotion) }}
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                {{ form_label(form.prixPromo, null, {'label_attr': {'class': 'form-label'}}) }}
-                                                <div class="input-group">
-                                                    {{ form_widget(form.prixPromo, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
-                                                    <span class="input-group-text">MAD</span>
-                                                </div>
-                                                {{ form_errors(form.prixPromo) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Agency (read-only) -->
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    {{ form_label(form.agence, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.agence, {'attr': {'class': 'form-control', 'readonly': true}}) }}
-                                    {{ form_errors(form.agence) }}
-                                </div>
-                            </div>
-
-                            <!-- Sold checkbox -->
-                            <div class="col-md-6 mb-3 d-flex align-items-center">
-                                <div class="form-check">
-                                    {{ form_widget(form.sold, {'attr': {'class': 'form-check-input'}}) }}
-                                    {{ form_label(form.sold, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
-                                    {{ form_errors(form.sold) }}
-                                </div>
+                                {{ form_errors(form.prixPromo) }}
                             </div>
                         </div>
-
-                        <!-- Navigation Buttons -->
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ path('app_property_index') }}" class="btn btn-secondary">
-                                <i class="fas fa-times me-2"></i>Annuler
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                Suivant <i class="fas fa-arrow-right ms-2"></i>
-                            </button>
-                        </div>
-
-                        {{ form_end(form) }}
                     </div>
+
+                    <!-- Agency and Sold Row -->
+                    <div class="field-row">
+                        <div class="field-group">
+                            {{ form_label(form.agence, null, {'label_attr': {'class': 'field-label'}}) }}
+                            {{ form_widget(form.agence, {'attr': {'class': 'field-input readonly', 'readonly': true}}) }}
+                            {{ form_errors(form.agence) }}
+                        </div>
+                        <div class="field-group checkbox-group">
+                            <div class="checkbox-wrapper">
+                                {{ form_widget(form.sold, {'attr': {'class': 'checkbox-input'}}) }}
+                                {{ form_label(form.sold, null, {'label_attr': {'class': 'checkbox-label'}}) }}
+                            </div>
+                            {{ form_errors(form.sold) }}
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <a href="{{ path('app_property_index') }}" class="btn btn-secondary">
+                            <i class="icon-x"></i>
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            Suivant
+                            <i class="icon-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
     </div>
 
     <style>
-        .progress-wrapper .progress {
-            border-radius: 10px;
+        * {
+            box-sizing: border-box;
         }
 
-        .form-label.fw-bold {
-            color: #2c3e50;
+        .property-form-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 2rem 1rem;
         }
 
-        .card {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            border: 1px solid #dee2e6;
+        .form-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .form-control:focus, .form-select:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .input-group-text {
-            background-color: #f8f9fa;
-            border-color: #ced4da;
+        .progress-bar-container {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            transition: width 0.3s ease;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .step {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            transition: color 0.2s ease;
+        }
+
+        .step.active {
+            color: #3b82f6;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-content h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .form-body {
+            padding: 2rem;
+        }
+
+        /* Form Fields */
+        .field-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .field-group.full-width {
+            width: 100%;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .field-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .field-input,
+        .field-select,
+        .field-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .field-input:focus,
+        .field-select:focus,
+        .field-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .field-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .readonly {
+            background: #f9fafb !important;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        /* Input with Suffix */
+        .input-with-suffix {
+            position: relative;
+            display: flex;
+        }
+
+        .input-suffix {
+            background: #f3f4f6;
+            border: 1.5px solid #e5e7eb;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0.75rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-width: 60px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-with-suffix .field-input {
+            border-radius: 8px 0 0 8px;
+            border-right: none;
+        }
+
+        /* Promotion Section */
+        .promotion-section {
+            background: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .promotion-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #d97706;
+        }
+
+        .promotion-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: end;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Icons (you can replace with FontAwesome or your preferred icon library) */
+        .icon-home::before { content: "🏠"; }
+        .icon-percentage::before { content: "💰"; }
+        .icon-x::before { content: "✕"; }
+        .icon-arrow-right::before { content: "→"; }
+
+        /* Error Messages */
+        .form-error {
+            color: #dc2626;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .property-form-container {
+                padding: 1rem;
+            }
+
+            .form-body {
+                padding: 1.5rem;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 {% endblock %}

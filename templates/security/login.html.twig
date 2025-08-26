@@ -1,75 +1,1093 @@
+{# templates/security/login.html.twig #}
+{#{% extends 'base.html.twig' %}#}
 
+{% block title %}ARAI RABAT - Connexion{% endblock %}
 
 {% block stylesheets %}
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --primary: #d42c2c;
+            --primary-dark: #b32424;
+            --secondary: #2d8f2d;
+            --secondary-light: #4db84d;
+            --accent: #ffd700;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --border-radius: 20px;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --glow: 0 0 20px rgba(212, 44, 44, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #f8f9fa;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--dark) 0%, #2c1810 50%, var(--dark) 100%);
+            color: var(--light);
+            perspective: 1000px;
+            position: relative;
         }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="moroccan" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><polygon points="10,2 18,10 10,18 2,10" fill="none" stroke="rgba(212,44,44,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23moroccan)"/></svg>');
+            opacity: 0.3;
+            z-index: 1;
+        }
+
         .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            background-color: #fff;
-            padding: 30px;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .login-card {
+            width: 480px;
+            position: relative;
+            z-index: 10;
+            transform-style: preserve-3d;
+            animation: cardEntrance 1.2s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) rotateX(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .card-glass {
+            position: absolute;
+            inset: 0;
+            background: rgba(26, 26, 26, 0.4);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            z-index: -1;
+            transition: var(--transition);
+        }
+
+        .card-glass-2 {
+            position: absolute;
+            inset: -4px;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, rgba(212, 44, 44, 0.1), transparent);
+            opacity: 0.6;
+            z-index: -2;
+            transform: translate(-6px, -6px);
+            border-top: 1px solid rgba(212, 44, 44, 0.2);
+            border-left: 1px solid rgba(212, 44, 44, 0.2);
+            transition: var(--transition);
+        }
+
+        .card-glass-3 {
+            position: absolute;
+            inset: -8px;
+            z-index: -3;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, rgba(45, 143, 45, 0.1), rgba(26, 26, 26, 0.2));
+            transform: translate(-12px, -12px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15);
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-area {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 35px 0 20px;
+            overflow: hidden;
+        }
+
+        .logo-backdrop {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            top: -175px;
+            background: radial-gradient(circle, rgba(212, 44, 44, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            filter: blur(25px);
+            animation: glow 10s infinite alternate;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.3);
+            }
+        }
+
+        .arai-logo {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 8px;
+            background-image: linear-gradient(135deg, var(--light) 40%, var(--primary) 70%, var(--accent) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 3px 8px rgba(212, 44, 44, 0.4));
+            text-shadow: 0 0 30px rgba(212, 44, 44, 0.3);
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .logo-description {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            max-width: 300px;
+            line-height: 1.4;
+        }
+
+        .moroccan-star {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 20px;
+            color: var(--secondary);
+            animation: starGlow 3s infinite alternate;
+        }
+
+        @keyframes starGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .accent-bar {
+            height: 3px;
+            width: 80px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--secondary), transparent);
+            margin: 0 auto 30px;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .accent-bar::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .card-body {
+            padding: 25px 40px 40px;
+        }
+
+        .login-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--light);
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .alert {
+            background: rgba(212, 44, 44, 0.2);
+            border: 1px solid rgba(212, 44, 44, 0.4);
+            color: var(--light);
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            animation: alertSlide 0.3s ease-out;
+        }
+
+        @keyframes alertSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.success {
+            background: rgba(45, 143, 45, 0.2);
+            border-color: rgba(45, 143, 45, 0.4);
+        }
+
+        .login-form .form-group {
+            position: relative;
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+
+        .form-group-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .form-group-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(135deg, var(--primary), transparent, transparent, var(--secondary));
+            border-radius: 16px;
+            z-index: -1;
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+        .form-group-wrapper:focus-within::before {
+            opacity: 1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .login-form .input-field {
+            width: 100%;
+            padding: 20px 50px 20px 50px;
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid transparent;
+            border-radius: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--light);
+            transition: var(--transition);
+        }
+
+        .login-form .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-form .input-field:focus {
+            outline: none;
+            border-color: transparent;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            transform: translateY(-50%);
+            color: var(--primary);
+            opacity: 0.9;
+            font-size: 18px;
+            pointer-events: none;
+            z-index: 2;
+            transition: var(--transition);
+        }
+
+        .form-group:focus-within .input-icon {
+            color: var(--accent);
+            animation: iconPulse 1.5s infinite alternate;
+        }
+
+        @keyframes iconPulse {
+            from { transform: translateY(-50%) scale(1); }
+            to { transform: translateY(-50%) scale(1.15); }
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .custom-checkbox input {
+            display: none;
+        }
+
+        .checkbox-ui {
+            width: 22px;
+            height: 22px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            position: relative;
+            transition: var(--transition);
+            overflow: hidden;
         }
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+
+        .custom-checkbox input:checked ~ .checkbox-ui {
+            border-color: var(--primary);
+            background: var(--primary);
         }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+
+        .checkbox-ui:after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 4px;
+            width: 6px;
+            height: 11px;
+            border: solid var(--light);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg) scale(0);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.3, 1.5, 0.7, 1);
         }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
+
+        .custom-checkbox input:checked ~ .checkbox-ui:after {
+            opacity: 1;
+            transform: rotate(45deg) scale(1);
+        }
+
+        .custom-checkbox:hover .checkbox-ui {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(212, 44, 44, 0.3);
+        }
+
+        .custom-checkbox span {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .login-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            color: var(--light);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(212, 44, 44, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        .login-button:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 44, 44, 0.5);
+            background: linear-gradient(135deg, #e63535, var(--primary));
+        }
+
+        .login-button:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .login-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+            z-index: -1;
+        }
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.8s;
+            z-index: 1;
+        }
+
+        .login-button:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .login-button.loading {
+            pointer-events: none;
+        }
+
+        .login-button.loading .btn-text {
+            opacity: 0;
+        }
+
+        .login-button.loading .spinner {
+            position: absolute;
+            display: block;
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--light);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .copyright {
+            position: relative;
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .copyright::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .copyright a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .copyright a:hover {
+            color: var(--light);
+        }
+
+        .system-status {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 12px 18px;
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: statusEntrance 1.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        @keyframes statusEntrance {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-indicator::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 50%;
+            opacity: 0.6;
+            transform: scale(1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(3); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .status-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .version-badge {
+            position: absolute;
+            bottom: 35px;
+            left: 35px;
+            background: rgba(0, 0, 0, 0.3);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: versionEntrance 1.5s 0.4s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes versionEntrance {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .geometric-shapes {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.7;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .shape-1 {
+            width: 450px;
+            height: 450px;
+            background: var(--primary);
+            top: -225px;
+            left: -225px;
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            width: 350px;
+            height: 350px;
+            background: var(--secondary);
+            bottom: -175px;
+            right: -125px;
+            border-radius: 50%;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .floating-shape-1 {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(212, 44, 44, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            top: 15%;
+            left: 10%;
+            animation: float1 18s infinite ease-in-out;
+        }
+
+        .floating-shape-2 {
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, rgba(45, 143, 45, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            bottom: 20%;
+            right: 15%;
+            animation: float2 15s infinite ease-in-out;
+        }
+
+        .floating-shape-3 {
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            top: 35%;
+            right: 25%;
+            animation: float3 25s infinite ease-in-out;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(60px, 25px); }
+            50% { transform: translate(25px, 70px); }
+            75% { transform: translate(-35px, 35px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-45px, -25px); }
+            50% { transform: translate(-20px, -50px); }
+            75% { transform: translate(25px, -30px); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(35px, 15px) rotate(90deg); }
+            50% { transform: translate(15px, -35px) rotate(180deg); }
+            75% { transform: translate(-25px, -20px) rotate(270deg); }
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 520px) {
+            .login-card {
+                width: 95%;
+                margin: 0 auto;
+            }
+
+            .logo-area {
+                padding: 30px 0 15px;
+            }
+
+            .arai-logo {
+                font-size: 38px;
+                letter-spacing: 4px;
+            }
+
+            .card-body {
+                padding: 20px 30px 35px;
+            }
+
+            .system-status, .version-badge {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .system-status {
+                top: 25px;
+                right: 25px;
+            }
+
+            .version-badge {
+                bottom: 25px;
+                left: 25px;
+            }
+
+            .login-form .input-field {
+                padding: 18px 45px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .card-body {
+                padding: 15px 25px 30px;
+            }
+
+            .arai-logo {
+                font-size: 32px;
+                letter-spacing: 3px;
+            }
+
+            .login-form .input-field {
+                padding: 16px 40px;
+            }
         }
     </style>
 {% endblock %}
 
 {% block body %}
     <div class="login-container">
-        <form method="post">
-            {% if error %}
-                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-            {% endif %}
+        <!-- Animated Geometric Shapes -->
+        <div class="geometric-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="floating-shape floating-shape-1"></div>
+            <div class="floating-shape floating-shape-2"></div>
+            <div class="floating-shape floating-shape-3"></div>
+        </div>
 
-            {% if app.user %}
-                <div class="mb-3">
-                    Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+        <!-- System Status Badge -->
+        <div class="system-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">Systèmes opérationnels</div>
+        </div>
+
+        <!-- Version Badge -->
+        <div class="version-badge">v3.2.1</div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <!-- Glass Effect Layers -->
+            <div class="card-glass"></div>
+            <div class="card-glass-2"></div>
+            <div class="card-glass-3"></div>
+
+            <!-- Card Content -->
+            <div class="card-content">
+                <!-- Logo Area -->
+                <div class="logo-area">
+                    <div class="logo-backdrop"></div>
+                    <div class="moroccan-star">✦</div>
+                    <h1 class="arai-logo">ARAI</h1>
+                    <div class="logo-subtitle">RABAT</div>
+                    <div class="logo-description">Association Régionale des Agences Immobilières<br>Rabat Salé Kénitra</div>
                 </div>
-            {% endif %}
 
-            <h1 class="h3 mb-3 font-weight-normal text-center">Veuillez vous connecter</h1>
+                <div class="accent-bar"></div>
 
-            <div class="form-group mb-3">
-                <label for="inputEmail" class="form-label">Adresse e-mail</label>
-                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Entrez votre e-mail" autocomplete="email" required autofocus>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <h2 class="login-title">Authentification</h2>
+
+                    <form class="login-form" method="post">
+                        <!-- Error Alert (Symfony errors) -->
+                        {% if error %}
+                            <div class="alert" id="errorAlert">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- User Info (if already logged in) -->
+                        {% if app.user %}
+                            <div class="alert success" id="userInfo">
+                                <i class="fas fa-user-check"></i>
+                                <span>Vous êtes connecté en tant que <strong>{{ app.user.userIdentifier }}</strong></span>
+                                <a href="{{ path('app_logout') }}" style="color: var(--light); margin-left: 10px;">Déconnexion</a>
+                            </div>
+                        {% endif %}
+
+                        <!-- Email Field -->
+                        <div class="form-group">
+                            <div class="form-group-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email"
+                                       id="inputEmail"
+                                       name="email"
+                                       value="{{ last_username }}"
+                                       class="input-field"
+                                       placeholder="Adresse e-mail"
+                                       required
+                                       autocomplete="email"
+                                       autofocus>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <div class="form-group-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password"
+                                       id="inputPassword"
+                                       name="password"
+                                       class="input-field"
+                                       placeholder="Mot de passe"
+                                       required
+                                       autocomplete="current-password">
+                            </div>
+                        </div>
+
+                        <!-- CSRF Token (Symfony) -->
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <!-- Form Footer -->
+                        <div class="form-footer">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" id="remember" name="_remember_me">
+                                <div class="checkbox-ui"></div>
+                                <span>Se souvenir de moi</span>
+                            </label>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button type="submit" class="login-button" id="loginBtn">
+                            <span class="spinner" style="display: none;"></span>
+                            <span class="btn-text">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Se connecter
+                            </span>
+                        </button>
+                    </form>
+
+                    <!-- Copyright -->
+                    <div class="copyright">
+                        © 2025 ARAI RABAT. Tous droits réservés | <a href="#">Politique de confidentialité</a>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group mb-3">
-                <label for="inputPassword" class="form-label">Mot de passe</label>
-                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Entrez votre mot de passe" autocomplete="current-password" required>
-            </div>
-
-            <input type="hidden" name="_csrf_token"
-                   value="{{ csrf_token('authenticate') }}"
-            >
-
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" name="_remember_me"> Se souvenir de moi
-                </label>
-            </div>
-
-            <div class="d-grid">
-                <button class="btn btn-lg btn-primary btn-block" type="submit">
-                    Se connecter
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 3D Tilt effect
+            const card = document.querySelector('.login-card');
+
+            document.addEventListener('mousemove', (e) => {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 30;
+
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+
+                // Adjust the glass layer positions for parallax effect
+                const cardGlass2 = document.querySelector('.card-glass-2');
+                const cardGlass3 = document.querySelector('.card-glass-3');
+
+                cardGlass2.style.transform = `translate(${-xAxis * 0.6}px, ${-yAxis * 0.6}px)`;
+                cardGlass3.style.transform = `translate(${-xAxis * 1.0}px, ${-yAxis * 1.0}px)`;
+            });
+
+            // Return to normal when mouse leaves
+            document.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+
+                const cardGlass2 = document.querySelector('.card-glass-2');
+                const cardGlass3 = document.querySelector('.card-glass-3');
+
+                cardGlass2.style.transform = `translate(-6px, -6px)`;
+                cardGlass3.style.transform = `translate(-12px, -12px)`;
+            });
+
+            // Form Submission - Show loading state but let Symfony handle authentication
+            const loginForm = document.querySelector('.login-form');
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = loginBtn.querySelector('.spinner');
+
+            loginForm.addEventListener('submit', function(e) {
+                // Show loading state
+                loginBtn.classList.add('loading');
+                spinner.style.display = 'block';
+                loginBtn.disabled = true;
+
+                // Let Symfony handle the form submission
+            });
+
+            // Input field focus effects
+            const formGroups = document.querySelectorAll('.form-group');
+
+            formGroups.forEach(group => {
+                const input = group.querySelector('.input-field');
+
+                input.addEventListener('focus', () => {
+                    group.style.transform = 'translateY(-4px)';
+                });
+
+                input.addEventListener('blur', () => {
+                    group.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Button ripple effect
+            loginBtn.addEventListener('mousedown', function(e) {
+                if (this.disabled) return;
+
+                const x = e.clientX - this.getBoundingClientRect().left;
+                const y = e.clientY - this.getBoundingClientRect().top;
+
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '1px';
+                ripple.style.height = '1px';
+                ripple.style.background = 'rgba(255, 255, 255, 0.8)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.transition = 'all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                ripple.style.zIndex = '2';
+
+                this.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.style.transform = 'scale(200)';
+                    ripple.style.opacity = '0';
+
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 800);
+                }, 10);
+            });
+
+            // Enhanced security indicator
+            const systemStatus = document.querySelector('.system-status');
+            let securityLevel = 'Sécurisé';
+            let statusColor = 'var(--secondary)';
+
+            setInterval(() => {
+                const levels = [
+                    { text: 'Systèmes opérationnels', color: 'var(--secondary)' },
+                    { text: 'Connexion sécurisée', color: 'var(--accent)' },
+                    { text: 'Authentification active', color: 'var(--primary)' }
+                ];
+
+                const randomLevel = levels[Math.floor(Math.random() * levels.length)];
+                document.querySelector('.status-text').textContent = randomLevel.text;
+                document.querySelector('.status-indicator').style.background = randomLevel.color;
+            }, 5000);
+
+            // Responsive handling for mobile
+            function handleResize() {
+                if (window.innerWidth < 480) {
+                    document.querySelectorAll('.floating-shape').forEach(shape => {
+                        shape.style.display = 'none';
+                    });
+                } else {
+                    document.querySelectorAll('.floating-shape').forEach(shape => {
+                        shape.style.display = 'block';
+                    });
+                }
+            }
+
+            window.addEventListener('resize', handleResize);
+            handleResize(); // Initial call
+
+            // Enhanced focus management
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+
+            document.addEventListener('mousedown', () => {
+                document.body.classList.remove('keyboard-navigation');
+            });
+
+            // Auto-dismiss success message after some time
+            const successAlert = document.querySelector('.alert.success');
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.style.opacity = '0';
+                    setTimeout(() => {
+                        successAlert.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            }
+
+            // Shake animation for errors
+            {% if error %}
+            card.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                card.style.animation = '';
+            }, 500);
+            {% endif %}
+        });
+    </script>
+
+    <style>
+        /* Additional styles for enhanced functionality */
+        .keyboard-navigation .input-field:focus,
+        .keyboard-navigation .login-button:focus,
+        .keyboard-navigation .custom-checkbox:focus-within {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .login-button.loading {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group.error .form-group-wrapper::before {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            opacity: 1;
+            animation: errorPulse 0.5s ease-in-out;
+        }
+
+        @keyframes errorPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .form-group.success .form-group-wrapper::before {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            opacity: 1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
 {% endblock %}

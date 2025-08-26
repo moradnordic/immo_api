@@ -3,306 +3,770 @@
 {% block title %}Nouvelle Propriété - Étape 3{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <!-- Progress Bar -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="progress-wrapper">
-                            <div class="progress mb-3" style="height: 10px;">
-                                <div class="progress-bar bg-success" role="progressbar"
-                                     style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-success"><i class="fas fa-check me-1"></i>1. Informations générales</small>
-                                <small class="text-success"><i class="fas fa-check me-1"></i>2. Détails spécifiques</small>
-                                <small class="text-primary fw-bold">3. Images</small>
-                            </div>
+    <div class="property-form-container">
+        <div class="form-wrapper">
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill completed" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="progress-steps">
+                    <span class="step completed">
+                        <i class="icon-check"></i>
+                        1. Informations générales
+                    </span>
+                    <span class="step completed">
+                        <i class="icon-check"></i>
+                        2. Détails spécifiques
+                    </span>
+                    <span class="step active">3. Images</span>
+                </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="summary-card">
+                <div class="summary-header">
+                    <i class="icon-info"></i>
+                    <h3>Résumé de votre propriété</h3>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-row">
+                        <div class="summary-item">
+                            <span class="summary-label">Titre:</span>
+                            <span class="summary-value">{{ step1Data.title ?? 'Non défini' }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Ville:</span>
+                            <span class="summary-value">{{ step1Data.city ?? 'Non définie' }}</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-item">
+                            <span class="summary-label">Type:</span>
+                            <span class="summary-value">{{ step1Data.type ?? 'Non défini' }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Surface:</span>
+                            <span class="summary-value">{{ step1Data.surface ?? 0 }} m²</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-item">
+                            <span class="summary-label">Prix:</span>
+                            <span class="summary-value price">{{ step1Data.price ?? 0 }} MAD</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Statut:</span>
+                            <span class="summary-value">{{ step1Data.propertyStatus ?? 'Non défini' }}</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Summary Card -->
-                <div class="card mb-4">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Résumé de votre propriété</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Titre:</strong> {{ step1Data.title ?? 'Non défini' }}</p>
-                                <p><strong>Type:</strong> {{ step1Data.type ?? 'Non défini' }}</p>
-                                <p><strong>Prix:</strong> {{ step1Data.price ?? 0 }} MAD</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Ville:</strong> {{ step1Data.city ?? 'Non définie' }}</p>
-                                <p><strong>Surface:</strong> {{ step1Data.surface ?? 0 }} m²</p>
-                                <p><strong>Statut:</strong> {{ step1Data.propertyStatus ?? 'Non défini' }}</p>
-                            </div>
-                        </div>
+            <!-- Form Section -->
+            <div class="form-card">
+                <div class="form-header">
+                    <div class="header-content">
+                        <i class="icon-images"></i>
+                        <h2>Étape 3 : Images de la propriété</h2>
                     </div>
                 </div>
 
-                <!-- Form Card -->
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">
-                            <i class="fas fa-images me-2"></i>
-                            Étape 3 : Images de la propriété
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+                <div class="form-body">
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data', 'class': 'property-form'}}) }}
 
-                        <div class="form-section">
-                            <div class="image-upload-container" id="dropZone">
-                                <div class="upload-icon-wrapper">
-                                    <i class="fas fa-cloud-upload-alt image-upload-icon"></i>
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <div class="upload-container" id="dropZone">
+                            <div class="upload-visual">
+                                <div class="upload-icon">
+                                    <i class="icon-cloud-upload"></i>
                                 </div>
-                                <h5 class="upload-title">Ajoutez vos images</h5>
-                                <p class="upload-subtitle">Glissez et déposez vos images ici ou cliquez pour sélectionner</p>
-                                <p class="upload-info text-muted">
-                                    <small>Formats acceptés: JPEG, PNG, GIF, WebP • Taille max: 5MB par image</small>
+                                <h4>Ajoutez vos images</h4>
+                                <p class="upload-description">
+                                    Glissez et déposez vos images ici ou cliquez pour sélectionner
                                 </p>
-                                {{ form_widget(form.imageFiles, {
-                                    'attr': {
-                                        'class': 'form-control d-none',
-                                        'id': 'imageFilesInput'
-                                    }
-                                }) }}
-                                <button type="button" class="btn btn-outline-primary mt-3" id="selectFilesBtn">
-                                    <i class="fas fa-plus me-2"></i>Sélectionner des images
-                                </button>
+                                <div class="upload-specs">
+                                    <span class="spec-item">JPEG, PNG, GIF, WebP</span>
+                                    <span class="spec-divider">•</span>
+                                    <span class="spec-item">Max 5MB par image</span>
+                                </div>
                             </div>
-                            {{ form_errors(form.imageFiles) }}
 
-                            <!-- Image Preview Container -->
-                            <div id="imagePreviewContainer" class="mt-4 d-none">
-                                <h6 class="text-primary"><i class="fas fa-eye me-2"></i>Aperçu des images sélectionnées</h6>
-                                <div id="imagePreviewGrid" class="image-preview-grid"></div>
-                            </div>
+                            {{ form_widget(form.imageFiles, {
+                                'attr': {
+                                    'class': 'hidden-file-input',
+                                    'id': 'imageFilesInput',
+                                    'multiple': true,
+                                    'accept': 'image/*'
+                                }
+                            }) }}
+
+                            <button type="button" class="upload-btn" id="selectFilesBtn">
+                                <i class="icon-plus"></i>
+                                Sélectionner des images
+                            </button>
                         </div>
-
-                        <!-- Navigation Buttons -->
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ path('app_property_back_to_step2') }}" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left me-2"></i>Précédent
-                            </a>
-                            <div>
-                                <a href="{{ path('app_property_new_cancel') }}" class="btn btn-secondary me-2">
-                                    <i class="fas fa-times me-2"></i>Annuler
-                                </a>
-                                <button type="submit" class="btn btn-success" id="submitBtn">
-                                    <i class="fas fa-check me-2"></i>Créer la propriété
-                                </button>
-                            </div>
-                        </div>
-
-                        {{ form_end(form) }}
+                        {{ form_errors(form.imageFiles) }}
                     </div>
+
+                    <!-- Image Preview Section -->
+                    <div id="imagePreviewSection" class="preview-section hidden">
+                        <div class="preview-header">
+                            <i class="icon-eye"></i>
+                            <h4>Aperçu des images sélectionnées</h4>
+                            <span class="image-count" id="imageCount">0 image(s)</span>
+                        </div>
+                        <div id="imagePreviewGrid" class="preview-grid"></div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <a href="{{ path('app_property_back_to_step2') }}" class="btn btn-outline">
+                            <i class="icon-arrow-left"></i>
+                            Précédent
+                        </a>
+                        <div class="actions-right">
+                            <a href="{{ path('app_property_new_cancel') }}" class="btn btn-secondary">
+                                <i class="icon-x"></i>
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-success" id="submitBtn">
+                                <i class="icon-check"></i>
+                                Créer la propriété
+                            </button>
+                        </div>
+                    </div>
+
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
     </div>
 
     <style>
-        .progress-wrapper .progress {
-            border-radius: 10px;
+        * {
+            box-sizing: border-box;
         }
 
-        .image-upload-container {
-            border: 3px dashed #dee2e6;
-            border-radius: 15px;
-            padding: 3rem 2rem;
-            text-align: center;
-            background: #f8f9fa;
-            transition: all 0.3s ease;
-            cursor: pointer;
+        .property-form-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 2rem 1rem;
         }
 
-        .image-upload-container:hover {
-            border-color: #0d6efd;
-            background: #e7f3ff;
+        .form-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
-        .image-upload-container.dragover {
-            border-color: #0d6efd;
-            background: #e7f3ff;
-            transform: scale(1.02);
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .upload-icon-wrapper {
+        .progress-bar-container {
             margin-bottom: 1rem;
         }
 
-        .image-upload-icon {
-            font-size: 3rem;
-            color: #6c757d;
-            transition: color 0.3s ease;
+        .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
         }
 
-        .image-upload-container:hover .image-upload-icon {
-            color: #0d6efd;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transition: width 0.3s ease;
         }
 
-        .upload-title {
-            color: #495057;
-            margin-bottom: 0.5rem;
+        .progress-fill.completed {
+            background: linear-gradient(90deg, #10b981, #059669);
         }
 
-        .upload-subtitle {
-            color: #6c757d;
-            margin-bottom: 0.5rem;
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
         }
 
-        .upload-info {
+        .step {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step.active {
+            color: #3b82f6;
+        }
+
+        .step.completed {
+            color: #10b981;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .summary-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .summary-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .summary-content {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: #374151;
+        }
+
+        .summary-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #0ea5e9;
+        }
+
+        .summary-label {
+            font-weight: 500;
+            color: #6b7280;
             font-size: 0.875rem;
         }
 
-        .image-preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+        .summary-value {
+            font-weight: 600;
+            color: #374151;
         }
 
-        .image-preview-item {
-            position: relative;
-            border-radius: 10px;
+        .summary-value.price {
+            color: #059669;
+            font-size: 1.1rem;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
         }
 
-        .image-preview-item:hover {
+        .form-header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-content h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .form-body {
+            padding: 2rem;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            margin-bottom: 2rem;
+        }
+
+        .upload-container {
+            border: 3px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-container:hover,
+        .upload-container.dragover {
+            border-color: #3b82f6;
+            background: #eff6ff;
             transform: translateY(-2px);
         }
 
-        .image-preview-item img {
+        .upload-visual {
+            margin-bottom: 2rem;
+        }
+
+        .upload-icon {
+            margin-bottom: 1rem;
+        }
+
+        .upload-icon i {
+            font-size: 3.5rem;
+            color: #9ca3af;
+            transition: color 0.3s ease;
+        }
+
+        .upload-container:hover .upload-icon i {
+            color: #3b82f6;
+        }
+
+        .upload-visual h4 {
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .upload-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .upload-specs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .spec-divider {
+            color: #d1d5db;
+        }
+
+        .hidden-file-input {
+            display: none !important;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Preview Section */
+        .preview-section {
+            margin-bottom: 2rem;
+        }
+
+        .preview-section.hidden {
+            display: none;
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .preview-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #374151;
+            flex: 1;
+        }
+
+        .preview-header i {
+            color: #3b82f6;
+        }
+
+        .image-count {
+            background: #eff6ff;
+            color: #3b82f6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .preview-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview-item img {
             width: 100%;
-            height: 150px;
+            height: 160px;
             object-fit: cover;
         }
 
-        .image-remove-btn {
+        .preview-remove {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(220, 53, 69, 0.9);
+            top: 8px;
+            right: 8px;
+            background: rgba(239, 68, 68, 0.9);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.75rem;
-            transition: background 0.2s ease;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
         }
 
-        .image-remove-btn:hover {
-            background: #dc3545;
+        .preview-remove:hover {
+            background: #ef4444;
+            transform: scale(1.1);
         }
 
-        .card {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            border: 1px solid #dee2e6;
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
         }
 
-        #submitBtn:disabled {
+        .actions-right {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #3b82f6;
+            border: 1.5px solid #3b82f6;
+        }
+
+        .btn-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn:disabled {
             opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
         }
 
-        .loading {
-            pointer-events: none;
-        }
-
-        .loading::after {
+        .btn.loading::after {
             content: '';
-            display: inline-block;
-            width: 1rem;
-            height: 1rem;
+            width: 16px;
+            height: 16px;
             margin-left: 0.5rem;
             border: 2px solid transparent;
-            border-top: 2px solid #ffffff;
+            border-top: 2px solid currentColor;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Icons */
+        .icon-check::before { content: "✓"; }
+        .icon-info::before { content: "ℹ️"; }
+        .icon-images::before { content: "🖼️"; }
+        .icon-cloud-upload::before { content: "☁️⬆️"; }
+        .icon-plus::before { content: "+"; }
+        .icon-eye::before { content: "👁️"; }
+        .icon-arrow-left::before { content: "←"; }
+        .icon-arrow-right::before { content: "→"; }
+        .icon-x::before { content: "✕"; }
+
+        /* Error Messages */
+        .form-error {
+            color: #dc2626;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .property-form-container {
+                padding: 1rem;
+            }
+
+            .form-body {
+                padding: 1.5rem;
+            }
+
+            .upload-container {
+                padding: 2rem 1rem;
+            }
+
+            .summary-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .preview-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .actions-right {
+                width: 100%;
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 
-        <script>
-            // Preview images before upload
-            document.querySelector('input[type="file"]').addEventListener('change', function(e) {
-            const preview = document.createElement('div');
-            preview.id = 'newImagesPreview';
-            preview.className = 'row mt-3';
-            preview.innerHTML = `
-        <div class="col-12">
-            <h5>Aperçu des nouvelles images</h5>
-            <div class="row" id="imagePreview"></div>
-        </div>
-    `;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let selectedFiles = [];
 
-            // Remove existing preview if any
-            const existingPreview = this.parentElement.querySelector('#newImagesPreview');
-            if (existingPreview) {
-            existingPreview.remove();
-        }
-
-            this.parentElement.appendChild(preview);
-            const previewContainer = document.getElementById('imagePreview');
-
-            Array.from(this.files).forEach(file => {
-            if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-            const div = document.createElement('div');
-            div.className = 'col-md-3 mb-3';
-            div.innerHTML = `
-                    <img src="${e.target.result}"
-                         class="img-thumbnail"
-                         style="width: 100%; height: 200px; object-fit: cover;">
-                `;
-            previewContainer.appendChild(div);
-        };
-            reader.readAsDataURL(file);
-        }
-        });
-        });
-
-            // Add drag and drop functionality
+            // DOM elements
             const dropZone = document.getElementById('dropZone');
-            const fileInput = document.querySelector('input[type="file"]');
+            const fileInput = document.querySelector('input[type="file"]'); // Find file input by type
+            const selectBtn = document.getElementById('selectFilesBtn');
+            const previewSection = document.getElementById('imagePreviewSection');
+            const previewGrid = document.getElementById('imagePreviewGrid');
+            const imageCount = document.getElementById('imageCount');
+            const submitBtn = document.getElementById('submitBtn');
 
-            dropZone.addEventListener('click', () => {
-            fileInput.click();
-        });
+            // Check if elements exist
+            if (!dropZone || !fileInput || !selectBtn) {
+                console.error('Required DOM elements not found', {
+                    dropZone: !!dropZone,
+                    fileInput: !!fileInput,
+                    selectBtn: !!selectBtn
+                });
+                return;
+            }
 
+            // File selection
+            selectBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            dropZone.addEventListener('click', (e) => {
+                if (e.target === selectBtn) return;
+                fileInput.click();
+            });
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(Array.from(e.target.files));
+            });
+
+            // Drag and drop
             dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
 
-            dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
+            dropZone.addEventListener('dragleave', (e) => {
+                if (!dropZone.contains(e.relatedTarget)) {
+                    dropZone.classList.remove('dragover');
+                }
+            });
 
             dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            fileInput.files = e.dataTransfer.files;
-            // Trigger change event manually
-            const event = new Event('change');
-            fileInput.dispatchEvent(event);
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files).filter(file =>
+                    file.type.startsWith('image/')
+                );
+                handleFiles(files);
+            });
+
+            // Handle files
+            function handleFiles(files) {
+                if (files.length === 0) return;
+
+                selectedFiles = [...selectedFiles, ...files];
+                updateFileInput();
+                renderPreview();
+            }
+
+            // Update file input
+            function updateFileInput() {
+                try {
+                    const dt = new DataTransfer();
+                    selectedFiles.forEach(file => dt.items.add(file));
+                    fileInput.files = dt.files;
+                } catch (error) {
+                    console.warn('DataTransfer not supported, files will be handled on submit');
+                }
+            }
+
+            // Render preview
+            function renderPreview() {
+                if (!previewSection || !previewGrid || !imageCount) return;
+
+                if (selectedFiles.length === 0) {
+                    previewSection.classList.add('hidden');
+                    return;
+                }
+
+                previewSection.classList.remove('hidden');
+                imageCount.textContent = `${selectedFiles.length} image(s)`;
+
+                previewGrid.innerHTML = '';
+
+                selectedFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const item = document.createElement('div');
+                        item.className = 'preview-item';
+                        item.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <button type="button" class="preview-remove" onclick="removeFile(${index})">
+                                ✕
+                            </button>
+                        `;
+                        previewGrid.appendChild(item);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Remove file function
+            function removeFile(index) {
+                selectedFiles.splice(index, 1);
+                updateFileInput();
+                renderPreview();
+            }
+
+            // Make removeFile globally accessible
+            window.removeFile = removeFile;
+
+            // Form submission
+            const form = document.querySelector('.property-form');
+            if (form && submitBtn) {
+                form.addEventListener('submit', (e) => {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('loading');
+                });
+            }
         });
     </script>
 {% endblock %}
