@@ -111,7 +111,6 @@ final class PropertyController extends AbstractController
 
         // Create form with existing data if available
         $existingData = $this->sessionManager->getStep1Data();
-
         $form = $this->createForm(PropertyStep1Type::class, $existingData, [
             'agence' => $agence,
         ]);
@@ -212,8 +211,19 @@ final class PropertyController extends AbstractController
                 $property->setNeighborhood($step1Data['neighborhood'] ?? '');
                 $property->setSold($step1Data['sold'] ?? false);
 
-                // Set step 2 data dynamically
+                // Set step 2 data with defaults for required fields
+                $property->setBath($step2Data['bath'] ?? 0);
+                $property->setRooms($step2Data['rooms'] ?? 0);
+                $property->setBed($step2Data['bed'] ?? 0); // If you have a bed field
+                $property->setSqft($step2Data['sqft'] ?? 0); // If you have a sqft field
+
+                // Set other step 2 data dynamically
                 foreach ($step2Data as $field => $value) {
+                    // Skip fields we've already handled
+                    if (in_array($field, ['bath', 'rooms', 'bed', 'sqft'])) {
+                        continue;
+                    }
+
                     $setter = 'set' . ucfirst($field);
                     if (method_exists($property, $setter)) {
                         $property->$setter($value);
@@ -243,6 +253,15 @@ final class PropertyController extends AbstractController
                 $property->setCreatedAt(new DateTimeImmutable());
                 $property->setCountry('maroc');
                 $property->setAgence($user->getAgence());
+
+                // Set any other required fields that might be missing
+                if (!$property->getStatus()) {
+                    $property->setStatus('active'); // or whatever default status you want
+                }
+                if (!$property->getHome()) {
+                    $property->setHome(false); // or true, depending on your logic
+                }
+
                 // Persist entity
                 $this->entityManager->persist($property);
                 $this->entityManager->flush();
@@ -254,10 +273,8 @@ final class PropertyController extends AbstractController
                 return $this->redirectToRoute('app_property_index');
 
             } catch (\Exception $e) {
+                dd($e);
                 $this->addFlash('error', 'Une erreur est survenue lors de la création de la propriété.');
-
-                // Log the error if you have a logger service
-                // $this->logger->error('Property creation failed: ' . $e->getMessage());
             }
         }
 

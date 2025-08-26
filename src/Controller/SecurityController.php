@@ -14,7 +14,7 @@ class SecurityController extends AbstractController
     {
         // Si l'utilisateur est déjà connecté, redirigez-le
         if ($this->getUser()) {
-            return $this->redirectToRoute('home'); // Remplacez 'home' par la route souhaitée
+            return $this->redirectToRoute('app_property_index'); // Remplacez 'home' par la route souhaitée
         }
 
         // Récupère l'erreur d'authentification, s'il y en a une

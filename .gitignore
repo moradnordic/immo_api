@@ -14,7 +14,7 @@
 /app/logs/*
 !app/cache/.gitkeep
 !app/logs/.gitkeep
-
+node_modules/.
 # Email spool folder
 /app/spool/*
 
@@ -82,6 +82,9 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+/.gitignore
+node_modules
+
 
 .env.save
 .env.local

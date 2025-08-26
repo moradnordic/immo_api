@@ -3,116 +3,590 @@
 {% block title %}Nouvelle Propriété - Étape 2{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <!-- Progress Bar -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="progress-wrapper">
-                            <div class="progress mb-3" style="height: 10px;">
-                                <div class="progress-bar bg-primary" role="progressbar"
-                                     style="width: 66.66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100">
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-success"><i class="fas fa-check me-1"></i>1. Informations générales</small>
-                                <small class="text-primary fw-bold">2. Détails spécifiques</small>
-                                <small class="text-muted">3. Images</small>
-                            </div>
-                        </div>
+    <div class="property-form-container">
+        <div class="form-wrapper">
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 66.66%"></div>
+                    </div>
+                </div>
+                <div class="progress-steps">
+                    <span class="step completed">
+                        <i class="icon-check"></i>
+                        1. Informations générales
+                    </span>
+                    <span class="step active">2. Détails spécifiques</span>
+                    <span class="step">3. Images</span>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-card">
+                <div class="form-header">
+                    <div class="header-content">
+                        <i class="icon-settings"></i>
+                        <h2>Étape 2 : Détails spécifiques</h2>
+                        <span class="property-type-badge">{{ propertyType|title }}</span>
                     </div>
                 </div>
 
-                <!-- Form Card -->
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">
-                            <i class="fas fa-cogs me-2"></i>
-                            Étape 2 : Détails spécifiques
-                            <span class="badge bg-light text-dark ms-2">{{ propertyType|title }}</span>
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="form-body">
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'property-form'}}) }}
 
-                        {% if propertyType == 'appartement' %}
-                            {% include 'property/forms/_appartement_fields.html.twig' %}
-                        {% elseif propertyType in ['maison', 'villa'] %}
-                            {% include 'property/forms/_maison_villa_fields.html.twig' %}
-                        {% elseif propertyType == 'bureau' %}
-                            {% include 'property/forms/_bureau_fields.html.twig' %}
-                        {% elseif propertyType == 'magasin' %}
-                            {% include 'property/forms/_magasin_fields.html.twig' %}
-                        {% else %}
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                Aucun champ spécifique requis pour ce type de propriété.
+                    {% if propertyType == 'appartement' %}
+                        <!-- Basic Info Section -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="icon-home"></i>
+                                <h3>Informations de base</h3>
                             </div>
-                        {% endif %}
 
-                        <!-- Navigation Buttons -->
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ path('app_property_back_to_step1') }}" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left me-2"></i>Précédent
-                            </a>
-                            <div>
-                                <a href="{{ path('app_property_new_cancel') }}" class="btn btn-secondary me-2">
-                                    <i class="fas fa-times me-2"></i>Annuler
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    Suivant <i class="fas fa-arrow-right ms-2"></i>
-                                </button>
+                            <div class="field-row three-columns">
+                                <div class="field-group">
+                                    {{ form_label(form.rooms, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    {{ form_widget(form.rooms, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                    {{ form_errors(form.rooms) }}
+                                </div>
+                                <div class="field-group">
+                                    {{ form_label(form.bath, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    {{ form_widget(form.bath, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                    {{ form_errors(form.bath) }}
+                                </div>
+                                <div class="field-group">
+                                    {{ form_label(form.nbrEtage, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    {{ form_widget(form.nbrEtage, {'attr': {'class': 'field-select'}}) }}
+                                    {{ form_errors(form.nbrEtage) }}
+                                </div>
                             </div>
                         </div>
 
-                        {{ form_end(form) }}
+                        <!-- État et Orientation Section -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="icon-compass"></i>
+                                <h3>État et Orientation</h3>
+                            </div>
+
+                            <div class="field-row">
+                                <div class="field-group">
+                                    {{ form_label(form.etat, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    {{ form_widget(form.etat, {'attr': {'class': 'field-select'}}) }}
+                                    {{ form_errors(form.etat) }}
+                                </div>
+                                <div class="field-group">
+                                    {{ form_label(form.orientation, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    {{ form_widget(form.orientation, {'attr': {'class': 'field-select'}}) }}
+                                    {{ form_errors(form.orientation) }}
+                                </div>
+                            </div>
+
+                            <div class="field-row">
+                                <div class="field-group">
+                                    {{ form_label(form.facadePrincipale, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    {{ form_widget(form.facadePrincipale, {'attr': {'class': 'field-select'}}) }}
+                                    {{ form_errors(form.facadePrincipale) }}
+                                </div>
+                                <div class="field-group">
+                                    {{ form_label(form.hauteur, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    <div class="input-with-suffix">
+                                        {{ form_widget(form.hauteur, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                        <span class="input-suffix">cm</span>
+                                    </div>
+                                    {{ form_errors(form.hauteur) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charges et Performance Section -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="icon-euro"></i>
+                                <h3>Charges et Performance</h3>
+                            </div>
+
+                            <div class="field-row">
+                                <div class="field-group">
+                                    {{ form_label(form.charges, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    <div class="input-with-suffix">
+                                        {{ form_widget(form.charges, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                        <span class="input-suffix">MAD</span>
+                                    </div>
+                                    {{ form_errors(form.charges) }}
+                                </div>
+                                <div class="field-group">
+                                    {{ form_label(form.dpeKwh, null, {'label_attr': {'class': 'field-label'}}) }}
+                                    <div class="input-with-suffix">
+                                        {{ form_widget(form.dpeKwh, {'attr': {'class': 'field-input', 'placeholder': '0'}}) }}
+                                        <span class="input-suffix">kWh/m²/an</span>
+                                    </div>
+                                    {{ form_errors(form.dpeKwh) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Équipements Section -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="icon-settings"></i>
+                                <h3>Équipements et Services</h3>
+                            </div>
+
+                            <div class="checkbox-grid">
+                                <div class="checkbox-item">
+                                    {{ form_widget(form.meubler, {'attr': {'class': 'checkbox-input'}}) }}
+                                    {{ form_label(form.meubler, null, {'label_attr': {'class': 'checkbox-label'}}) }}
+                                </div>
+                                <div class="checkbox-item">
+                                    {{ form_widget(form.concierge, {'attr': {'class': 'checkbox-input'}}) }}
+                                    {{ form_label(form.concierge, null, {'label_attr': {'class': 'checkbox-label'}}) }}
+                                </div>
+                                <div class="checkbox-item">
+                                    {{ form_widget(form.ascenseur, {'attr': {'class': 'checkbox-input'}}) }}
+                                    {{ form_label(form.ascenseur, null, {'label_attr': {'class': 'checkbox-label'}}) }}
+                                </div>
+                                <div class="checkbox-item">
+                                    {{ form_widget(form.climatisation, {'attr': {'class': 'checkbox-input'}}) }}
+                                    {{ form_label(form.climatisation, null, {'label_attr': {'class': 'checkbox-label'}}) }}
+                                </div>
+                                <div class="checkbox-item">
+                                    {{ form_widget(form.residenceSurveillee, {'attr': {'class': 'checkbox-input'}}) }}
+                                    {{ form_label(form.residenceSurveillee, null, {'label_attr': {'class': 'checkbox-label'}}) }}
+                                </div>
+                                <div class="checkbox-item">
+                                    {{ form_widget(form.chauffageIndividuel, {'attr': {'class': 'checkbox-input'}}) }}
+                                    {{ form_label(form.chauffageIndividuel, null, {'label_attr': {'class': 'checkbox-label'}}) }}
+                                </div>
+                            </div>
+                        </div>
+
+                    {% elseif propertyType in ['maison', 'villa'] %}
+                        {% include 'property/forms/_maison_villa_fields.html.twig' %}
+                    {% elseif propertyType == 'bureau' %}
+                        {% include 'property/forms/_bureau_fields.html.twig' %}
+                    {% elseif propertyType == 'magasin' %}
+                        {% include 'property/forms/_magasin_fields.html.twig' %}
+                    {% else %}
+                        <div class="info-message">
+                            <i class="icon-info"></i>
+                            <p>Aucun champ spécifique requis pour ce type de propriété.</p>
+                        </div>
+                    {% endif %}
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <a href="{{ path('app_property_back_to_step1') }}" class="btn btn-outline">
+                            <i class="icon-arrow-left"></i>
+                            Précédent
+                        </a>
+                        <div class="actions-right">
+                            <a href="{{ path('app_property_new_cancel') }}" class="btn btn-secondary">
+                                <i class="icon-x"></i>
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Suivant
+                                <i class="icon-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
+
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
     </div>
 
     <style>
-        .progress-wrapper .progress {
-            border-radius: 10px;
+        * {
+            box-sizing: border-box;
         }
 
-        .form-label.fw-bold {
-            color: #2c3e50;
+        .property-form-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 2rem 1rem;
         }
 
-        .card {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            border: 1px solid #dee2e6;
+        .form-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
-        .form-control:focus, .form-select:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .input-group-text {
-            background-color: #f8f9fa;
-            border-color: #ced4da;
+        .progress-bar-container {
+            margin-bottom: 1rem;
         }
 
-        .form-check-input:checked {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
+        .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
         }
 
-        .section-divider {
-            border-top: 2px solid #e9ecef;
-            margin: 2rem 0 1.5rem 0;
-            padding-top: 1.5rem;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            transition: width 0.3s ease;
         }
 
-        .section-title {
-            color: #495057;
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .step {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step.active {
+            color: #3b82f6;
+        }
+
+        .step.completed {
+            color: #10b981;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-content h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .property-type-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-body {
+            padding: 2rem;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .section-header h3 {
+            margin: 0;
             font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        .section-header i {
+            color: #3b82f6;
+        }
+
+        /* Form Fields */
+        .field-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .field-row.three-columns {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .field-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .field-input,
+        .field-select,
+        .field-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .field-input:focus,
+        .field-select:focus,
+        .field-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Input with Suffix */
+        .input-with-suffix {
+            position: relative;
+            display: flex;
+        }
+
+        .input-suffix {
+            background: #f3f4f6;
+            border: 1.5px solid #e5e7eb;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0.75rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-with-suffix .field-input {
+            border-radius: 8px 0 0 8px;
+            border-right: none;
+        }
+
+        /* Checkbox Grid */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        /* Info Message */
+        .info-message {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #1e40af;
+        }
+
+        .info-message p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .actions-right {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #3b82f6;
+            border: 1.5px solid #3b82f6;
+        }
+
+        .btn-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Icons */
+        .icon-check::before { content: "✓"; }
+        .icon-settings::before { content: "⚙️"; }
+        .icon-home::before { content: "🏠"; }
+        .icon-compass::before { content: "🧭"; }
+        .icon-euro::before { content: "💰"; }
+        .icon-info::before { content: "ℹ️"; }
+        .icon-arrow-left::before { content: "←"; }
+        .icon-arrow-right::before { content: "→"; }
+        .icon-x::before { content: "✕"; }
+
+        /* Error Messages */
+        .form-error {
+            color: #dc2626;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .property-form-container {
+                padding: 1rem;
+            }
+
+            .form-body {
+                padding: 1.5rem;
+            }
+
+            .field-row,
+            .field-row.three-columns {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .actions-right {
+                width: 100%;
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .property-type-badge {
+                align-self: center;
+            }
         }
     </style>
 {% endblock %}
