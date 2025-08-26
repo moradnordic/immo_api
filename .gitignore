@@ -82,3 +82,13 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+.env.save
+.env.local
+public/test.php
+
+# Uploaded files (these change frequently)
+public/uploads/
+public/images/blogs/
+
+
