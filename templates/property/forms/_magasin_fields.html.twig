@@ -1,0 +1,184 @@
+<!-- Magasin Specific Fields -->
+<div class="row">
+    <!-- Configuration de base Section -->
+    <div class="col-12 mb-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-store me-2 text-primary"></i>Configuration de base
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.nombreNiveaux, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.nombreNiveaux, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+            {{ form_errors(form.nombreNiveaux) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.charges, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            <div class="input-group">
+                {{ form_widget(form.charges, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                <span class="input-group-text">MAD</span>
+            </div>
+            {{ form_errors(form.charges) }}
+        </div>
+    </div>
+
+    <!-- État du local Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-tools me-2 text-primary"></i>État du local
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-check">
+            {{ form_widget(form.neuf, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.neuf, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-check">
+            {{ form_widget(form.aRenover, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.aRenover, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+        </div>
+    </div>
+
+    <!-- Dates Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-calendar me-2 text-primary"></i>Historique
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.dateConstruction, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.dateConstruction, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.dateConstruction) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.dateRenovation, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            {{ form_widget(form.dateRenovation, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.dateRenovation) }}
+        </div>
+    </div>
+
+    <!-- Aménagements commerciaux Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-shopping-cart me-2 text-primary"></i>Aménagements commerciaux
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-check">
+            {{ form_widget(form.doubleVitrine, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.doubleVitrine, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-check">
+            {{ form_widget(form.extractionFumee, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.extractionFumee, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+        </div>
+    </div>
+
+    <!-- Équipements Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-cogs me-2 text-primary"></i>Équipements
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.climatisation, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.climatisation, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.chauffage, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.chauffage, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.wc, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.wc, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-check">
+                    {{ form_widget(form.entrepot, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.entrepot, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance énergétique Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-leaf me-2 text-primary"></i>Performance énergétique
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.dpeKwh, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            <div class="input-group">
+                {{ form_widget(form.dpeKwh, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                <span class="input-group-text">kWh/m²/an</span>
+            </div>
+            {{ form_errors(form.dpeKwh) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            {{ form_label(form.dpeCo2, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+            <div class="input-group">
+                {{ form_widget(form.dpeCo2, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                <span class="input-group-text">CO2/m²/an</span>
+            </div>
+            {{ form_errors(form.dpeCo2) }}
+        </div>
+    </div>
+
+    <!-- Sécurité Section -->
+    <div class="col-12 mb-4 mt-4">
+        <h6 class="section-title border-bottom pb-2">
+            <i class="fas fa-shield-alt me-2 text-primary"></i>Sécurité
+        </h6>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-check">
+            {{ form_widget(form.detecteurIncendie, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.detecteurIncendie, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="form-check">
+            {{ form_widget(form.systemeSecurite, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.systemeSecurite, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+        </div>
+    </div>
+</div>

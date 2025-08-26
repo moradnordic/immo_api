@@ -3,9 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Property;
+use App\Form\PropertyStep1Type;
+use App\Form\PropertyStep2Type;
+use App\Form\PropertyStep3Type;
 use App\Form\PropertyType;
 use App\Repository\AgenceRepository;
 use App\Repository\PropertyRepository;
+use App\Service\PropertyFormSessionManager;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,6 +24,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 #[Route('/property')]
 final class PropertyController extends AbstractController
 {
+    public function __construct(
+        private  PropertyFormSessionManager $sessionManager,
+        private  EntityManagerInterface     $entityManager,
+        private  Security                   $security
+    ) {}
     #[Route(name: 'app_property_index', methods: ['GET'])]
     public function index(PropertyRepository $propertyRepository, Security $security): Response
     {
@@ -27,7 +36,9 @@ final class PropertyController extends AbstractController
             $properties = $propertyRepository->findAll(); // Admin gets all properties
         } else {
             $user = $security->getUser();
-            $properties = $propertyRepository->findBy(['agence' => $user->getAgence()]); // Non-admin gets only their agency's properties
+
+            $properties = $propertyRepository->findBy(['agence' => $user->getAgence()]);
+
         }
 
         return $this->render('property/index.html.twig', [
@@ -42,7 +53,10 @@ final class PropertyController extends AbstractController
 
         $property = new Property();
         $user = $security->getUser(); // Get the currently logged-in user
-
+//        $classMetadata = $entityManager->getClassMetadata(Property::class);
+//        $fields = $classMetadata->getFieldNames();
+//
+//        dd($fields); // Dump all field names
         // Assuming the `User` entity has a relation to `Agence`
         $agence = $user->getAgence(); // Get the user's associated agence
 
@@ -87,6 +101,202 @@ final class PropertyController extends AbstractController
             'form' => $form->createView(),
             'is_edit' => $property->getId() !== null,
         ]);
+    }
+
+    #[Route('/new/step1', name: 'app_property_new_step1', methods: ['GET', 'POST'])]
+    public function newStep1(Request $request): Response
+    {
+        $user = $this->security->getUser();
+        $agence = $user->getAgence();
+
+        // Create form with existing data if available
+        $existingData = $this->sessionManager->getStep1Data();
+
+        $form = $this->createForm(PropertyStep1Type::class, $existingData, [
+            'agence' => $agence,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Save step 1 data to session
+            $this->sessionManager->saveStep1Data($form->getData());
+
+            // Get property type for next step
+            $propertyType = $form->get('type')->getData();
+
+            return $this->redirectToRoute('app_property_new_step2', [
+                'type' => $propertyType
+            ]);
+        }
+
+        return $this->render('property/new_step1.html.twig', [
+            'form' => $form->createView(),
+            'step' => 1,
+            'totalSteps' => 3,
+        ]);
+    }
+
+    #[Route('/new/step2/{type}', name: 'app_property_new_step2', methods: ['GET', 'POST'])]
+    public function newStep2(string $type, Request $request): Response
+    {
+        // Check if step 1 is completed
+        if (!$this->sessionManager->hasStep1Data()) {
+            $this->addFlash('error', 'Veuillez d\'abord compléter l\'étape 1.');
+            return $this->redirectToRoute('app_property_new_step1');
+        }
+
+        // Validate property type
+        $validTypes = ['appartement', 'maison', 'villa', 'bureau', 'magasin', 'ferme'];
+        if (!in_array($type, $validTypes)) {
+            $this->addFlash('error', 'Type de propriété invalide.');
+            return $this->redirectToRoute('app_property_new_step1');
+        }
+
+        // Create form with existing data if available
+        $existingData = $this->sessionManager->getStep2Data();
+
+        $form = $this->createForm(PropertyStep2Type::class, $existingData, [
+            'property_type' => $type,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Save step 2 data to session
+            $this->sessionManager->saveStep2Data($form->getData());
+
+            return $this->redirectToRoute('app_property_new_step3');
+        }
+
+        return $this->render('property/new_step2.html.twig', [
+            'form' => $form->createView(),
+            'propertyType' => $type,
+            'step' => 2,
+            'totalSteps' => 3,
+        ]);
+    }
+
+    #[Route('/new/step3', name: 'app_property_new_step3', methods: ['GET', 'POST'])]
+    public function newStep3(Request $request): Response
+    {
+        // Check if previous steps are completed
+        if (!$this->sessionManager->hasStep1Data() || !$this->sessionManager->hasStep2Data()) {
+            $this->addFlash('error', 'Veuillez compléter les étapes précédentes.');
+            return $this->redirectToRoute('app_property_new_step1');
+        }
+
+        $form = $this->createForm(PropertyStep3Type::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                // Create new Property entity
+                $property = new Property();
+                $user = $this->security->getUser();
+
+                // Get all data from session
+                $step1Data = $this->sessionManager->getStep1Data();
+                $step2Data = $this->sessionManager->getStep2Data();
+
+                // Set step 1 data
+                $property->setTitle($step1Data['title'] ?? '');
+                $property->setDescription($step1Data['description'] ?? '');
+                $property->setPrice($step1Data['price'] ?? 0);
+                $property->setType($step1Data['type'] ?? '');
+                $property->setPropertyStatus($step1Data['propertyStatus'] ?? '');
+                $property->setAgeBien($step1Data['ageBien'] ?? null);
+                $property->setPromotion($step1Data['promotion'] ?? null);
+                $property->setPrixPromo($step1Data['prixPromo'] ?? null);
+                $property->setTypeUsage($step1Data['type_usage'] ?? '');
+                $property->setSurface($step1Data['surface'] ?? 0);
+                $property->setCity($step1Data['city'] ?? '');
+                $property->setNeighborhood($step1Data['neighborhood'] ?? '');
+                $property->setSold($step1Data['sold'] ?? false);
+
+                // Set step 2 data dynamically
+                foreach ($step2Data as $field => $value) {
+                    $setter = 'set' . ucfirst($field);
+                    if (method_exists($property, $setter)) {
+                        $property->$setter($value);
+                    }
+                }
+
+                // Handle uploaded images
+                $images = $form->get('imageFiles')->getData();
+                if ($images) {
+                    $imageFilenames = [];
+                    foreach ($images as $image) {
+                        /** @var UploadedFile $image */
+                        $newFilename = uniqid() . '.' . $image->guessExtension();
+
+                        // Move the file to the directory where images are stored
+                        $image->move(
+                            $this->getParameter('images_directory'),
+                            $newFilename
+                        );
+
+                        $imageFilenames[] = $newFilename;
+                    }
+                    $property->setImg($imageFilenames);
+                }
+
+                // Set default values
+                $property->setCreatedAt(new DateTimeImmutable());
+                $property->setCountry('maroc');
+                $property->setAgence($user->getAgence());
+                // Persist entity
+                $this->entityManager->persist($property);
+                $this->entityManager->flush();
+
+                // Clear session data
+                $this->sessionManager->clearData();
+
+                $this->addFlash('success', 'La propriété a été créée avec succès!');
+                return $this->redirectToRoute('app_property_index');
+
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de la création de la propriété.');
+
+                // Log the error if you have a logger service
+                // $this->logger->error('Property creation failed: ' . $e->getMessage());
+            }
+        }
+
+        return $this->render('property/new_step3.html.twig', [
+            'form' => $form->createView(),
+            'step' => 3,
+            'totalSteps' => 3,
+            'step1Data' => $this->sessionManager->getStep1Data(),
+            'step2Data' => $this->sessionManager->getStep2Data(),
+        ]);
+    }
+
+    #[Route('/new/back-to-step1', name: 'app_property_back_to_step1')]
+    public function backToStep1(): Response
+    {
+        return $this->redirectToRoute('app_property_new_step1');
+    }
+
+    #[Route('/new/back-to-step2', name: 'app_property_back_to_step2')]
+    public function backToStep2(): Response
+    {
+        $propertyType = $this->sessionManager->getPropertyType();
+
+        if (!$propertyType) {
+            return $this->redirectToRoute('app_property_new_step1');
+        }
+
+        return $this->redirectToRoute('app_property_new_step2', [
+            'type' => $propertyType
+        ]);
+    }
+
+    #[Route('/new/cancel', name: 'app_property_new_cancel')]
+    public function cancelPropertyCreation(): Response
+    {
+        $this->sessionManager->clearData();
+        $this->addFlash('info', 'La création de propriété a été annulée.');
+
+        return $this->redirectToRoute('app_property_index');
     }
 
     #[Route('/{id}', name: 'app_property_show', methods: ['GET'])]

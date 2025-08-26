@@ -58,7 +58,7 @@ security:
         - { path: ^/address, roles: [ ROLE_ADMIN, ROLE_AGENT ] } # Admin and Agent roles
         - { path: ^/property, roles: [ ROLE_ADMIN, ROLE_AGENT,ROLE_AGENCE ] } # Admin and Agent roles
         - { path: ^/api, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_ADMIN } # Admin access to all other pages
+        - { path: ^/, roles: [ ROLE_ADMIN, ROLE_AGENT,ROLE_AGENCE ] } # Admin access to all other pages
 
 
 

@@ -1,0 +1,220 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Propriété - Étape 1{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Progress Bar -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="progress-wrapper">
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div class="progress-bar bg-primary" role="progressbar"
+                                     style="width: 33.33%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-primary fw-bold">1. Informations générales</small>
+                                <small class="text-muted">2. Détails spécifiques</small>
+                                <small class="text-muted">3. Images</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Card -->
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-home me-2"></i>
+                            Étape 1 : Informations générales
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                        <div class="row">
+                            <!-- Title -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.title, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.title, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Appartement moderne avec vue mer'}}) }}
+                                    {{ form_errors(form.title) }}
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.description, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez votre propriété...', 'rows': 4}}) }}
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            </div>
+
+                            <!-- Price and Property Type -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.price, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    <div class="input-group">
+                                        {{ form_widget(form.price, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                                        <span class="input-group-text">MAD</span>
+                                    </div>
+                                    {{ form_errors(form.price) }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.type, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+                                    {{ form_errors(form.type) }}
+                                </div>
+                            </div>
+
+                            <!-- Property Status and Usage Type -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.propertyStatus, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.propertyStatus, {'attr': {'class': 'form-select'}}) }}
+                                    {{ form_errors(form.propertyStatus) }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.type_usage, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.type_usage, {'attr': {'class': 'form-select'}}) }}
+                                    {{ form_errors(form.type_usage) }}
+                                </div>
+                            </div>
+
+                            <!-- Surface and Age -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.surface, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    <div class="input-group">
+                                        {{ form_widget(form.surface, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                                        <span class="input-group-text">m²</span>
+                                    </div>
+                                    {{ form_errors(form.surface) }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.ageBien, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    <div class="input-group">
+                                        {{ form_widget(form.ageBien, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                                        <span class="input-group-text">ans</span>
+                                    </div>
+                                    {{ form_errors(form.ageBien) }}
+                                </div>
+                            </div>
+
+                            <!-- City and Neighborhood -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.city, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.city, {'attr': {'class': 'form-select'}}) }}
+                                    {{ form_errors(form.city) }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.neighborhood, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.neighborhood, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Centre-ville, Agdal...'}}) }}
+                                    {{ form_errors(form.neighborhood) }}
+                                </div>
+                            </div>
+
+                            <!-- Promotion Section -->
+                            <div class="col-md-12 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-header bg-warning text-dark">
+                                        <h6 class="mb-0"><i class="fas fa-percentage me-2"></i>Promotions (Optionnel)</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                {{ form_label(form.promotion, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                {{ form_widget(form.promotion, {'attr': {'class': 'form-select'}}) }}
+                                                {{ form_errors(form.promotion) }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form_label(form.prixPromo, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                <div class="input-group">
+                                                    {{ form_widget(form.prixPromo, {'attr': {'class': 'form-control', 'placeholder': '0'}}) }}
+                                                    <span class="input-group-text">MAD</span>
+                                                </div>
+                                                {{ form_errors(form.prixPromo) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Agency (read-only) -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ form_label(form.agence, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.agence, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                                    {{ form_errors(form.agence) }}
+                                </div>
+                            </div>
+
+                            <!-- Sold checkbox -->
+                            <div class="col-md-6 mb-3 d-flex align-items-center">
+                                <div class="form-check">
+                                    {{ form_widget(form.sold, {'attr': {'class': 'form-check-input'}}) }}
+                                    {{ form_label(form.sold, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                                    {{ form_errors(form.sold) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('app_property_index') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Suivant <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .progress-wrapper .progress {
+            border-radius: 10px;
+        }
+
+        .form-label.fw-bold {
+            color: #2c3e50;
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+        }
+    </style>
+{% endblock %}
