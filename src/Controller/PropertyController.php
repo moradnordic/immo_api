@@ -230,25 +230,66 @@ final class PropertyController extends AbstractController
                     }
                 }
 
-                // Handle uploaded images
                 $images = $form->get('imageFiles')->getData();
                 if ($images) {
                     $imageFilenames = [];
-                    foreach ($images as $image) {
-                        /** @var UploadedFile $image */
-                        $newFilename = uniqid() . '.' . $image->guessExtension();
+                    $targetDirectory = rtrim($this->getParameter('images_directory'), '/\\') . DIRECTORY_SEPARATOR;
 
-                        // Move the file to the directory where images are stored
-                        $image->move(
-                            $this->getParameter('images_directory'),
-                            $newFilename
-                        );
+                    // Debug: Log the actual directory path
+                    error_log("Target directory: " . $targetDirectory);
 
-                        $imageFilenames[] = $newFilename;
+                    // Create directory if it doesn't exist
+                    if (!is_dir($targetDirectory)) {
+                        error_log("Directory doesn't exist, creating: " . $targetDirectory);
+                        if (!mkdir($targetDirectory, 0777, true)) {
+                            $lastError = error_get_last();
+                            throw new \RuntimeException(sprintf(
+                                'Directory "%s" could not be created. Error: %s',
+                                $targetDirectory,
+                                $lastError['message'] ?? 'Unknown error'
+                            ));
+                        }
+                        // Set permissions after creation (Windows)
+                        chmod($targetDirectory, 0777);
                     }
-                    $property->setImg($imageFilenames);
-                }
 
+                    // Check if directory exists and is writable
+                    if (!is_dir($targetDirectory)) {
+                        throw new \RuntimeException(sprintf('Directory "%s" does not exist', $targetDirectory));
+                    }
+
+                    if (!is_writable($targetDirectory)) {
+                        // Get more detailed information about the directory
+                        $perms = fileperms($targetDirectory);
+                        throw new \RuntimeException(sprintf(
+                            'Directory "%s" is not writable. Current permissions: %o. Please check folder permissions.',
+                            $targetDirectory,
+                            $perms
+                        ));
+                    }
+
+                    foreach ($images as $image) {
+                        if ($image instanceof UploadedFile && $image->isValid()) {
+                            $newFilename = uniqid() . '.' . $image->guessExtension();
+
+                            try {
+                                $image->move($targetDirectory, $newFilename);
+                                $imageFilenames[] = $newFilename;
+                            } catch (\Exception $e) {
+                                throw new \RuntimeException(sprintf(
+                                    'Failed to move file "%s" to "%s". Error: %s',
+                                    $image->getClientOriginalName(),
+                                    $targetDirectory,
+                                    $e->getMessage()
+                                ));
+                            }
+                        }
+                    }
+
+                    if (!empty($imageFilenames)) {
+                        $property->setImg($imageFilenames);
+                    }
+                }
                 // Set default values
                 $property->setCreatedAt(new DateTimeImmutable());
                 $property->setCountry('maroc');
@@ -273,7 +314,6 @@ final class PropertyController extends AbstractController
                 return $this->redirectToRoute('app_property_index');
 
             } catch (\Exception $e) {
-                dd($e);
                 $this->addFlash('error', 'Une erreur est survenue lors de la création de la propriété.');
             }
         }
