@@ -84,3 +84,14 @@ node_modules/.
 ###< symfony/asset-mapper ###
 /.gitignore
 node_modules
+
+
+.env.save
+.env.local
+public/test.php
+
+# Uploaded files (these change frequently)
+public/uploads/
+public/images/blogs/
+
+
